@@ -38,6 +38,37 @@ def display_config():
     print "unit4.min 0"
     print "unit4.label Unit 4"
     print ""
+    # Load on the lines
+    print "multigraph loads_lines"
+    print "graph_title Rivne NPP Load on the lines (in MWh)"
+    print "graph_category performance"
+    print "graph_scale no"
+    print "graph_args --base 1000"
+    print "graph_vlabel megawatt-hours"
+    print ""
+    print "l_kyiv.min 0"
+    print "l_kyiv.label AL-750kV Kyiv"
+    print "l_zu.min 0"
+    print "l_zu.label AL-750kV Western-Ukrainian"
+    print "l_grabiv.min 0"
+    print "l_grabiv.label AL-330kV Hrabiv"
+    print "l_rivne.min 0"
+    print "l_rivne.label AL-330kV Rivne"
+    print "l_lutsk.min 0"
+    print "l_lutsk.label AL-330kV Lutsk"
+    print "l_kovel.min 0"
+    print "l_kovel.label AL-330kV Kovel"
+    print "l_vladimirets.min 0"
+    print "l_vladimirets.label AL-110kV Volodymyrets"
+    print "l_hinochi.min 0"
+    print "l_hinochi.label AL-110kV Hinochi"
+    print "l_kuznetsovsk.min 0"
+    print "l_kuznetsovsk.label AL-110kV Kuznetsovsk"
+    print "l_manevichi.min 0"
+    print "l_manevichi.label AL-110kV Manevychi"
+    print "l_komarovo.min 0"
+    print "l_komarovo.label AL-110kV Komarovo"
+    print ""
     # Meteo
     print "multigraph air_temperature"
     print "graph_title Rivne NPP Air temperature (in Degrees Celsius)"
@@ -53,7 +84,7 @@ def display_config():
 def rnpp_node(config):
     url = "http://%s/informer/sprut.php" % (config['host'])
 
-    response = requests.get(url=url, params=config['params'],
+    response = requests.get(url=url, params=config['params1'],
                             headers=config["headers"])
     response.encoding = 'utf-8'
     data = json.loads(response.text)
@@ -66,6 +97,23 @@ def rnpp_node(config):
 
     print "multigraph air_temperature"
     print "air_temp.value %s" % (data["M_TA_1M_AVG"])
+
+    response = requests.get(url=url, params=config['params2'],
+                            headers=config["headers"])
+    response.encoding = 'utf-8'
+    data = json.loads(response.text)["N"]
+    print "multigraph loads_lines"
+    print "l_kyiv.value %s" % (data["L_KYIV"])
+    print "l_zu.value %s" % (data["L_ZU"])
+    print "l_grabiv.value %s" % (data["L_GRABIV"])
+    print "l_rivne.value %s" % (data["L_RIVNE"])
+    print "l_lutsk.value %s" % (data["L_LUTSK"])
+    print "l_kovel.value %s" % (data["L_KOVEL"])
+    print "l_vladimirets.value %s" % (data["L_VLADIMIRETS"])
+    print "l_hinochi.value %s" % (data["L_HINOCHI"])
+    print "l_kuznetsovsk.value %s" % (data["L_KUZNETSOVSK"])
+    print "l_manevichi.value %s" % (data["L_MANEVICHI"])
+    print "l_komarovo.value %s" % (data["L_KOMAROVO"])
     sys.exit(0)
 
 
@@ -78,7 +126,8 @@ def main():
     config = {
         'host': os.environ.get('host', 'www.rnpp.rv.ua'),
         'logging': os.environ.get('logging', 'no'),
-        'params': {'value': 'sprutbase'},
+        'params1': {'value': 'sprutbase'},
+        'params2': {'value': 'rnpp_n'},
         'headers': {'User-Agent': user_agent.random}
     }
 

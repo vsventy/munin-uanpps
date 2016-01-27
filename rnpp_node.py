@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import os
 import sys
 import requests
@@ -19,6 +20,7 @@ def init_logging():
 
 
 def display_config():
+    # Loads Units
     print "multigraph loads_units"
     print "graph_title Rivne NPP Loads Units (in MW)"
     print "graph_category performance"
@@ -35,6 +37,17 @@ def display_config():
     print "unit3.label Unit 3"
     print "unit4.min 0"
     print "unit4.label Unit 4"
+    print ""
+    # Meteo
+    print "multigraph air_temperature"
+    print "graph_title Rivne NPP Air temperature (in Degrees Celsius)"
+    print "graph_category meteo"
+    print "graph_scale no"
+    print "graph_args --base 1000 --upper-limit 20 --lower-limit -20"
+    print "graph_vlabel degrees Celsius"
+    print ""
+    print "air_temp.label Air temperature"
+    print ""
 
 
 def rnpp_node(config):
@@ -50,7 +63,10 @@ def rnpp_node(config):
     print "unit2.value %s" % (data["R_N_B2"])
     print "unit3.value %s" % (data["R_N_B3"])
     print "unit4.value %s" % (data["R_N_B4"])
-    print ""
+
+    print "multigraph air_temperature"
+    print "air_temp.value %s" % (data["M_TA_1M_AVG"])
+    sys.exit(0)
 
 
 def main():

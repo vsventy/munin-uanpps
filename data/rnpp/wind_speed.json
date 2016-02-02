@@ -1,0 +1,25 @@
+{
+  "id": "wind_speed",
+  "title": "Rivne NPP Wind speed (in m/s)",
+  "category": "meteo",
+  "vlabel": "meters per second (m/s)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "wind_speed_avg",
+      "label": "Wind speed (avg)",
+      "parameter": "M_SPDAVG2M"
+    },
+    {
+      "id": "wind_speed_min",
+      "label": "Wind speed (min)",
+      "parameter": "M_SPDMIN2M"
+    },
+    {
+      "id": "wind_speed_max",
+      "label": "Wind speed (max)",
+      "parameter": "M_SPDMAX2M"
+    }
+  ]
+}

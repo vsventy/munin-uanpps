@@ -1,6 +1,6 @@
 {
   "id": "air_temperature",
-  "title": "Rivne NPP Air temperature (in Degrees Celsius)",
+  "title": "Rivne NPP Air temperature (in degrees Celsius)",
   "category": "meteo",
   "vlabel": "degrees Celsius",
   "total": "",

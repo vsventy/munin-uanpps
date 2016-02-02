@@ -1,0 +1,15 @@
+{
+  "id": "relative_humidity",
+  "title": "Rivne NPP Relative humidity (in %)",
+  "category": "meteo",
+  "vlabel": "%",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "rel_humidity",
+      "label": "Relative humidity",
+      "parameter": "M_RH_1M_AVG"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "id": "loads_lines",
   "title": "Rivne NPP Load on the lines (in MWh)",
   "category": "performance",
-  "vlabel": "megawatt-hours",
+  "vlabel": "megawatt-hours (MWh)",
   "total": "",
   "scale": "no",
   "fields": [

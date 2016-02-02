@@ -1,0 +1,15 @@
+{
+  "id": "rainfall_intensity",
+  "title": "Rivne NPP Intensity of rainfall (in mm/h)",
+  "category": "meteo",
+  "vlabel": "millimeter per hour (mm/h)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "rain_intensity",
+      "label": "Intensity of rainfall",
+      "parameter": "M_PW_INST"
+    }
+  ]
+}

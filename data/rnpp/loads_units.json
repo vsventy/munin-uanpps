@@ -2,7 +2,7 @@
   "id": "loads_units",
   "title": "Rivne NPP Loads Units (in MW)",
   "category": "performance",
-  "vlabel": "megawatts",
+  "vlabel": "megawatts (MW)",
   "total": "Total plant load",
   "scale": "no",
   "fields": [

@@ -8,14 +8,29 @@ import logging
 import httplib
 from fake_useragent import UserAgent
 
-with open("data/rnpp/loads_units.json") as json_file:
+
+ABSOLUTE_PATH = os.path.dirname(os.path.realpath(__file__)) + "/data/rnpp/"
+
+with open(ABSOLUTE_PATH + "loads_units.json") as json_file:
     LOADS_UNITS = json.load(json_file)
 
-with open("data/rnpp/loads_lines.json") as json_file:
+with open(ABSOLUTE_PATH + "loads_lines.json") as json_file:
     LOADS_LINES = json.load(json_file)
 
-with open("data/rnpp/air_temperature.json") as json_file:
+with open(ABSOLUTE_PATH + "air_temperature.json") as json_file:
     AIR_TEMPERATURE = json.load(json_file)
+
+with open(ABSOLUTE_PATH + "humidity.json") as json_file:
+    HUMIDITY = json.load(json_file)
+
+with open(ABSOLUTE_PATH + "atm.json") as json_file:
+    ATM = json.load(json_file)
+
+with open(ABSOLUTE_PATH + "rainfall_intensity.json") as json_file:
+    RAINFALL_INTENSITY = json.load(json_file)
+
+with open(ABSOLUTE_PATH + "wind_speed.json") as json_file:
+    WIND_SPEED = json.load(json_file)
 
 
 def init_logging():
@@ -49,9 +64,41 @@ def display_config():
 
     # Air temperature
     init_multigraph(AIR_TEMPERATURE)
-    print "graph_args --base 1000 --upper-limit 20 --lower-limit -20"
+    print "graph_args --base 1000 --upper-limit 20 --lower-limit -20 HRULE:0#a1a1a1"
     print ""
     for field in AIR_TEMPERATURE["fields"]:
+        print "%s.label %s" % (field["id"], field["label"])
+    print ""
+
+    # Relative humidity
+    init_multigraph(HUMIDITY)
+    print "graph_args --base 1000 --upper-limit 100 --lower-limit 0"
+    print ""
+    for field in HUMIDITY["fields"]:
+        print "%s.label %s" % (field["id"], field["label"])
+    print ""
+
+    # Atmospheric pressure
+    init_multigraph(ATM)
+    print "graph_args --base 1000"
+    print ""
+    for field in ATM["fields"]:
+        print "%s.label %s" % (field["id"], field["label"])
+    print ""
+
+    # Intensity of rainfall
+    init_multigraph(RAINFALL_INTENSITY)
+    print "graph_args --base 1000 --upper-limit 100 --lower-limit 0"
+    print ""
+    for field in RAINFALL_INTENSITY["fields"]:
+        print "%s.label %s" % (field["id"], field["label"])
+    print ""
+
+    # Wind speed
+    init_multigraph(WIND_SPEED)
+    print "graph_args --base 1000 --upper-limit 50 --lower-limit 0"
+    print ""
+    for field in WIND_SPEED["fields"]:
         print "%s.label %s" % (field["id"], field["label"])
     print ""
 
@@ -61,15 +108,19 @@ def init_multigraph(config):
     print "graph_title %s" % (config["title"])
     print "graph_category %s" % (config["category"])
     print "graph_vlabel %s" % (config["vlabel"])
-    if not config["total"]:
+    if config["total"]:
         print "graph_total %s" % (config["total"])
     print "graph_scale %s" % (config["scale"])
 
 
-def get_values_multigraph(data, config):
+def get_values_multigraph(data, config, ratio=None):
     print "multigraph %s" % (config["id"])
     for field in config["fields"]:
-        print "%s.value %s" % (field["id"], data[field["parameter"]])
+        if ratio is None:
+            value = data[field["parameter"]]
+        else:
+            value = float(data[field["parameter"]]) * ratio
+        print "%s.value %.2f" % (field["id"], value)
 
 
 def rnpp_node(config):
@@ -85,6 +136,18 @@ def rnpp_node(config):
 
     # Air temperature
     get_values_multigraph(data, AIR_TEMPERATURE)
+
+    # Relative humidity
+    get_values_multigraph(data, HUMIDITY)
+
+    # Atmospheric pressure (convert hectopascals to millimeter of mercury)
+    get_values_multigraph(data, ATM, 0.7500637554192)
+
+    # Intensity of rainfall
+    get_values_multigraph(data, RAINFALL_INTENSITY)
+
+    # Wind speed
+    get_values_multigraph(data, WIND_SPEED)
 
     # Load on the lines
     response = requests.get(url=url, params=config['params2'],
@@ -103,7 +166,7 @@ def main():
         user_agent.update()
         user_agent = user_agent.random
     except:
-        user_agent = 'Default Browser'
+        user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0'
 
     # Init config
     config = {

@@ -1,0 +1,15 @@
+{
+  "id": "atm",
+  "title": "Rivne NPP Atmospheric pressure (in mmHg)",
+  "category": "meteo",
+  "vlabel": "millimeter of mercury (mmHg)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "atm",
+      "label": "Atmospheric pressure",
+      "parameter": "M_PA_1M_AVG"
+    }
+  ]
+}

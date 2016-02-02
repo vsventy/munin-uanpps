@@ -32,6 +32,9 @@ with open(ABSOLUTE_PATH + "rainfall_intensity.json") as json_file:
 with open(ABSOLUTE_PATH + "wind_speed.json") as json_file:
     WIND_SPEED = json.load(json_file)
 
+with open(ABSOLUTE_PATH + "radiology.json") as json_file:
+    RADIOLOGY = json.load(json_file)
+
 
 def init_logging():
     httplib.HTTPConnection.debuglevel = 1
@@ -102,6 +105,14 @@ def display_config():
         print "%s.label %s" % (field["id"], field["label"])
     print ""
 
+    # Radiological situation
+    init_multigraph(RADIOLOGY)
+    print "graph_args --base 1000 --lower-limit 0 --alt-y-grid"
+    print ""
+    for field in RADIOLOGY["fields"]:
+        print "%s.label %s" % (field["id"], field["label"])
+        print "%s.info %s" % (field["id"], field["info"])
+    print ""
 
 def init_multigraph(config):
     print "multigraph %s" % (config["id"])
@@ -149,7 +160,10 @@ def rnpp_node(config):
     # Wind speed
     get_values_multigraph(data, WIND_SPEED)
 
-    # Load on the lines
+    # Wind speed
+    get_values_multigraph(data, RADIOLOGY)
+
+    # Radiological situation
     response = requests.get(url=url, params=config['params2'],
                             headers=config["headers"])
     response.encoding = 'utf-8'

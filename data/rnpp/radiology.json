@@ -1,0 +1,94 @@
+{
+  "id": "radiology",
+  "title": "Rivne NPP Radiological situation (in uSv/h)",
+  "category": "radiology",
+  "vlabel": "microsieverts per hour (uSv/h)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "r_plant_site",
+      "label": "Plant site",
+      "parameter": "A_HP10_0102",
+      "info": ""
+    },
+    {
+      "id": "r_oru750",
+      "label": "ORU-750",
+      "parameter": "A_HP10_1904",
+      "info": ""
+    },
+    {
+      "id": "r_ndv",
+      "label": "NDV",
+      "parameter": "A_HP10_2204",
+      "info": ""
+    },
+    {
+      "id": "r_kuznetsovsk",
+      "label": "Kuznetsovsk",
+      "parameter": "A_HP10_1802",
+      "info": "3.5km"
+    },
+    {
+      "id": "r_airport",
+      "label": "Airport",
+      "parameter": "A_HP10_2104",
+      "info": "4.3km"
+    },
+    {
+      "id": "r_sukhovolya",
+      "label": "Sukhovolya",
+      "parameter": "A_HP10_2004",
+      "info": "5.5km"
+    },
+    {
+      "id": "r_vel_vedmezhka",
+      "label": "Velyka Vedmezhka",
+      "parameter": "A_HP10_2404",
+      "info": "6.6km"
+    },
+    {
+      "id": "r_kostyukhnivka",
+      "label": "Kostyukhnivka",
+      "parameter": "A_HP10_3104",
+      "info": "9.3km"
+    },
+    {
+      "id": "r_sopachiv",
+      "label": "Sopachiv",
+      "parameter": "A_HP10_2904",
+      "info": "9.7km"
+    },
+    {
+      "id": "r_st_chortoryisk",
+      "label": "Staryi Chortoryisk",
+      "parameter": "A_HP10_2504",
+      "info": "10.7km"
+    },
+    {
+      "id": "r_lyubakhy",
+      "label": "Lyubakhy",
+      "parameter": "A_HP10_2804",
+      "info": "11km"
+    },
+    {
+      "id": "r_bilska_volya",
+      "label": "Bilska Volya",
+      "parameter": "A_HP10_3004",
+      "info": "13.7km"
+    },
+    {
+      "id": "r_vel_zholudsk",
+      "label": "Velykyi Zholudsk",
+      "parameter": "A_HP10_2704",
+      "info": "14km"
+    },
+    {
+      "id": "r_polytsi",
+      "label": "Polytsi",
+      "parameter": "A_HP10_2604",
+      "info": "14.1km"
+    }
+  ]
+}

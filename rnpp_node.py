@@ -49,7 +49,7 @@ def init_logging():
 def display_config():
     # Loads Units
     init_multigraph(LOADS_UNITS)
-    print "graph_args --base 1000"
+    print "graph_args --base 1000 --lower-limit 0"
     print ""
     for field in LOADS_UNITS["fields"]:
         print "%s.min 0" % (field["id"])
@@ -79,6 +79,7 @@ def display_config():
     print ""
     for field in HUMIDITY["fields"]:
         print "%s.label %s" % (field["id"], field["label"])
+        print "%s.colour %s" % (field["id"], field["colour"])
     print ""
 
     # Atmospheric pressure
@@ -87,6 +88,9 @@ def display_config():
     print ""
     for field in ATM["fields"]:
         print "%s.label %s" % (field["id"], field["label"])
+        print "%s.colour %s" % (field["id"], field["colour"])
+        print "%s.type GAUGE" % (field["id"])
+        print "%s.draw AREA" % (field["id"])
     print ""
 
     # Intensity of rainfall
@@ -95,6 +99,9 @@ def display_config():
     print ""
     for field in RAINFALL_INTENSITY["fields"]:
         print "%s.label %s" % (field["id"], field["label"])
+        print "%s.colour %s" % (field["id"], field["colour"])
+        print "%s.type GAUGE" % (field["id"])
+        print "%s.draw AREA" % (field["id"])
     print ""
 
     # Wind speed
@@ -103,6 +110,8 @@ def display_config():
     print ""
     for field in WIND_SPEED["fields"]:
         print "%s.label %s" % (field["id"], field["label"])
+        print "%s.draw LINE%s" % (field["id"], field["thickness"])
+        print "%s.colour %s" % (field["id"], field["colour"])
     print ""
 
     # Radiological situation

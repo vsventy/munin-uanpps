@@ -9,7 +9,8 @@
     {
       "id": "rain_intensity",
       "label": "Intensity of rainfall",
-      "parameter": "M_PW_INST"
+      "parameter": "M_PW_INST",
+      "colour": "COLOUR1"
     }
   ]
 }

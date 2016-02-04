@@ -9,7 +9,8 @@
     {
       "id": "rel_humidity",
       "label": "Relative humidity",
-      "parameter": "M_RH_1M_AVG"
+      "parameter": "M_RH_1M_AVG",
+      "colour": "COLOUR1"
     }
   ]
 }

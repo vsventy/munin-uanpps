@@ -60,6 +60,11 @@
       "id": "l_komarovo",
       "label": "AL-110kV Komarovo",
       "parameter": "L_KOMAROVO"
+    },
+    {
+      "id": "l_own",
+      "label": "Own needs",
+      "parameter": "RNPP_SN"
     }
   ]
 }

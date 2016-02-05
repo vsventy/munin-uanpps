@@ -58,11 +58,12 @@ def display_config():
 
     # Load on the lines
     init_multigraph(LOADS_LINES)
-    print "graph_args --base 1000"
+    print "graph_args --base 1000 --lower-limit 0"
     print ""
     for field in LOADS_LINES["fields"]:
         print "%s.min 0" % (field["id"])
         print "%s.label %s" % (field["id"], field["label"])
+        print "%s.draw AREASTACK" % (field["id"])
     print ""
 
     # Air temperature
@@ -123,6 +124,7 @@ def display_config():
         print "%s.info %s" % (field["id"], field["info"])
     print ""
 
+
 def init_multigraph(config):
     print "multigraph %s" % (config["id"])
     print "graph_title %s" % (config["title"])
@@ -169,10 +171,10 @@ def rnpp_node(config):
     # Wind speed
     get_values_multigraph(data, WIND_SPEED)
 
-    # Wind speed
+    # Radiological situation
     get_values_multigraph(data, RADIOLOGY)
 
-    # Radiological situation
+    # Load on the lines
     response = requests.get(url=url, params=config['params2'],
                             headers=config["headers"])
     response.encoding = 'utf-8'

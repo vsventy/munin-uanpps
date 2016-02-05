@@ -14,6 +14,9 @@ ABSOLUTE_PATH = os.path.dirname(os.path.realpath(__file__)) + "/data/rnpp/"
 with open(ABSOLUTE_PATH + "loads_units.json") as json_file:
     LOADS_UNITS = json.load(json_file)
 
+with open(ABSOLUTE_PATH + "loads_units_by_tgen.json") as json_file:
+    LOADS_UNITS_BY_TGEN = json.load(json_file)
+
 with open(ABSOLUTE_PATH + "loads_lines.json") as json_file:
     LOADS_LINES = json.load(json_file)
 
@@ -54,6 +57,17 @@ def display_config():
     for field in LOADS_UNITS["fields"]:
         print "%s.min 0" % (field["id"])
         print "%s.label %s" % (field["id"], field["label"])
+    print ""
+
+    # Loads Units by turbogenerators
+    init_multigraph(LOADS_UNITS_BY_TGEN)
+    print "graph_args --base 1000 --lower-limit 0"
+    print ""
+    for field in LOADS_UNITS_BY_TGEN["fields"]:
+        print "%s.min 0" % (field["id"])
+        print "%s.label %s" % (field["id"], field["label"])
+        print "%s.colour %s" % (field["id"], field["colour"])
+        print "%s.draw AREASTACK" % (field["id"])
     print ""
 
     # Load on the lines
@@ -107,7 +121,7 @@ def display_config():
 
     # Wind speed
     init_multigraph(WIND_SPEED)
-    print "graph_args --base 1000 --upper-limit 50 --lower-limit 0"
+    print "graph_args --base 1000 --upper-limit 20 --lower-limit 0"
     print ""
     for field in WIND_SPEED["fields"]:
         print "%s.label %s" % (field["id"], field["label"])
@@ -174,12 +188,16 @@ def rnpp_node(config):
     # Radiological situation
     get_values_multigraph(data, RADIOLOGY)
 
-    # Load on the lines
     response = requests.get(url=url, params=config['params2'],
                             headers=config["headers"])
     response.encoding = 'utf-8'
     data = json.loads(response.text)["N"]
+
+    # Load on the lines
     get_values_multigraph(data, LOADS_LINES)
+
+    # Loads Units by turbogenerators
+    get_values_multigraph(data, LOADS_UNITS_BY_TGEN)
 
     sys.exit(0)
 

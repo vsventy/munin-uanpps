@@ -38,6 +38,9 @@ with open(ABSOLUTE_PATH + "wind_speed.json") as json_file:
 with open(ABSOLUTE_PATH + "radiology.json") as json_file:
     RADIOLOGY = json.load(json_file)
 
+with open(ABSOLUTE_PATH + "production_electricity.json") as json_file:
+    PRODUCTION_ELECTRICITY = json.load(json_file)
+
 
 def init_logging():
     httplib.HTTPConnection.debuglevel = 1
@@ -138,6 +141,16 @@ def display_config():
         print "%s.info %s" % (field["id"], field["info"])
     print ""
 
+    # Production of electricity for current day/month
+    init_multigraph(PRODUCTION_ELECTRICITY)
+    print "graph_args --base 1000 --lower-limit 0"
+    print ""
+    for field in PRODUCTION_ELECTRICITY["fields"]:
+        print "%s.label %s" % (field["id"], field["label"])
+        print "%s.type GAUGE" % (field["id"])
+        print "%s.draw AREA" % (field["id"])
+    print ""
+
 
 def init_multigraph(config):
     print "multigraph %s" % (config["id"])
@@ -152,10 +165,14 @@ def init_multigraph(config):
 def get_values_multigraph(data, config, ratio=None):
     print "multigraph %s" % (config["id"])
     for field in config["fields"]:
-        if ratio is None:
-            value = data[field["parameter"]]
+        if '.' in field["parameter"]:
+            parameter = field["parameter"].split(".")
+            value = data[parameter[0]][parameter[1]]
         else:
-            value = float(data[field["parameter"]]) * ratio
+            parameter = field["parameter"]
+            value = data[parameter]
+        if ratio:
+            value = float(value) * ratio
         print "%s.value %.2f" % (field["id"], value)
 
 
@@ -199,6 +216,14 @@ def rnpp_node(config):
     # Loads Units by turbogenerators
     get_values_multigraph(data, LOADS_UNITS_BY_TGEN)
 
+    response = requests.get(url=url, params=config['params3'],
+                            headers=config["headers"])
+    response.encoding = 'utf-8'
+    data = json.loads(response.text)
+
+    # Production of electricity for current day/month
+    get_values_multigraph(data, PRODUCTION_ELECTRICITY, 0.001)
+
     sys.exit(0)
 
 
@@ -217,6 +242,7 @@ def main():
         'logging': os.environ.get('logging', 'no'),
         'params1': {'value': 'sprutbase'},
         'params2': {'value': 'rnpp_n'},
+        'params3': {'value': 'rnpp_current_state'},
         'headers': {'User-Agent': user_agent}
     }
 

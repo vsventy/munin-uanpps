@@ -1,0 +1,20 @@
+{
+  "id": "production_electricity",
+  "title": "Rivne NPP Production of electricity (in mln kWh)",
+  "category": "performance",
+  "vlabel": "million kilowatt-hours (mln kWh)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "prod_for_day",
+      "label": "For current day",
+      "parameter": "P_CurrentDay.W_RnPP"
+    },
+    {
+      "id": "prod_for_month",
+      "label": "For current month",
+      "parameter": "P_CurrentMonth.W_RnPP"
+    }
+  ]
+}

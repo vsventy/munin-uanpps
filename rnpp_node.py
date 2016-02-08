@@ -171,6 +171,12 @@ def get_values_multigraph(data, config, ratio=None):
         else:
             parameter = field["parameter"]
             value = data[parameter]
+        try:
+            value = float(value)
+        except (TypeError, ValueError) as exception:
+            print "ERROR: Invalid value for %s - %s" % (field["id"], value)
+            print exception
+            return
         if ratio:
             value = float(value) * ratio
         print "%s.value %.2f" % (field["id"], value)

@@ -7,9 +7,10 @@ import json
 import logging
 import httplib
 from fake_useragent import UserAgent
+from logging.handlers import TimedRotatingFileHandler
 
-
-ABSOLUTE_PATH = os.path.dirname(os.path.realpath(__file__)) + "/data/rnpp/"
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
+ABSOLUTE_PATH = ROOT_PATH + "/data/rnpp/"
 
 with open(ABSOLUTE_PATH + "loads_units.json") as json_file:
     LOADS_UNITS = json.load(json_file)
@@ -40,6 +41,17 @@ with open(ABSOLUTE_PATH + "radiology.json") as json_file:
 
 with open(ABSOLUTE_PATH + "production_electricity.json") as json_file:
     PRODUCTION_ELECTRICITY = json.load(json_file)
+
+logger = logging.getLogger(__name__)
+
+logHandler = TimedRotatingFileHandler(ROOT_PATH + '/logs/rnpp-node.log',
+                                      when="D",
+                                      interval=1,
+                                      backupCount=5)
+logFormatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+logHandler.setFormatter(logFormatter)
+logger.addHandler(logHandler)
+logger.setLevel(logging.DEBUG)
 
 
 def init_logging():
@@ -174,15 +186,17 @@ def get_values_multigraph(data, config, ratio=None):
         try:
             value = float(value)
         except (TypeError, ValueError) as exception:
-            print "ERROR: Invalid value for %s - %s" % (field["id"], value)
-            print exception
-            return
+            logger.error('Invalid value for field \"%s\": %s=%s',
+                         field["id"], parameter, value)
+            continue
         if ratio:
             value = float(value) * ratio
         print "%s.value %.2f" % (field["id"], value)
 
 
 def rnpp_node(config):
+    logger.info('Start rnpp-node (main)')
+
     url = "http://%s/informer/sprut.php" % (config['host'])
 
     response = requests.get(url=url, params=config['params1'],
@@ -214,7 +228,11 @@ def rnpp_node(config):
     response = requests.get(url=url, params=config['params2'],
                             headers=config["headers"])
     response.encoding = 'utf-8'
-    data = json.loads(response.text)["N"]
+    try:
+        data = json.loads(response.text)["N"]
+    except:
+        logger.error('When decode data: url=%s, params=%s',
+                     url, config['params2'])
 
     # Load on the lines
     get_values_multigraph(data, LOADS_LINES)
@@ -225,15 +243,25 @@ def rnpp_node(config):
     response = requests.get(url=url, params=config['params3'],
                             headers=config["headers"])
     response.encoding = 'utf-8'
-    data = json.loads(response.text)
+    try:
+        data = json.loads(response.text)
+    except:
+        logger.error('When decode data: url=%s, params=%s',
+                     url, config['params3'])
 
     # Production of electricity for current day/month
     get_values_multigraph(data, PRODUCTION_ELECTRICITY, 0.001)
 
+    logger.info('Finish rnpp-node (main)')
     sys.exit(0)
 
 
 def main():
+    # Display config
+    if len(sys.argv) > 1 and sys.argv[1] == "config":
+        display_config()
+        sys.exit(0)
+
     # Init User-Agent
     try:
         user_agent = UserAgent()
@@ -241,6 +269,8 @@ def main():
         user_agent = user_agent.random
     except:
         user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0'
+
+    logger.debug('UserAgent = \"%s\"', user_agent)
 
     # Init config
     config = {
@@ -256,10 +286,6 @@ def main():
     if config["logging"] == "yes":
         init_logging()
 
-    # Display config
-    if len(sys.argv) > 1 and sys.argv[1] == "config":
-        display_config()
-        sys.exit(0)
     rnpp_node(config)
 
 if __name__ == "__main__":

@@ -42,6 +42,9 @@ with open(ABSOLUTE_PATH + "radiology.json") as json_file:
 with open(ABSOLUTE_PATH + "production_electricity.json") as json_file:
     PRODUCTION_ELECTRICITY = json.load(json_file)
 
+with open(ROOT_PATH + "/data/" + "colors.json") as json_file:
+    COLORS = json.load(json_file)
+
 logger = logging.getLogger(__name__)
 
 logHandler = TimedRotatingFileHandler(ROOT_PATH + '/logs/rnpp-node.log',
@@ -68,98 +71,76 @@ def display_config():
     # Loads Units
     init_multigraph(LOADS_UNITS)
     print "graph_args --base 1000 --lower-limit 0"
-    print ""
+    init_base_parameters(LOADS_UNITS)
     for field in LOADS_UNITS["fields"]:
         print "%s.min 0" % (field["id"])
-        print "%s.label %s" % (field["id"], field["label"])
     print ""
 
     # Loads Units by turbogenerators
     init_multigraph(LOADS_UNITS_BY_TGEN)
     print "graph_args --base 1000 --lower-limit 0"
-    print ""
+    init_base_parameters(LOADS_UNITS_BY_TGEN)
     for field in LOADS_UNITS_BY_TGEN["fields"]:
         print "%s.min 0" % (field["id"])
-        print "%s.label %s" % (field["id"], field["label"])
-        print "%s.colour %s" % (field["id"], field["colour"])
         print "%s.draw AREASTACK" % (field["id"])
     print ""
 
     # Load on the lines
     init_multigraph(LOADS_LINES)
     print "graph_args --base 1000 --lower-limit 0"
-    print ""
+    init_base_parameters(LOADS_LINES)
     for field in LOADS_LINES["fields"]:
         print "%s.min 0" % (field["id"])
-        print "%s.label %s" % (field["id"], field["label"])
         print "%s.draw AREASTACK" % (field["id"])
     print ""
 
     # Air temperature
     init_multigraph(AIR_TEMPERATURE)
     print "graph_args --base 1000 --upper-limit 20 --lower-limit -20 HRULE:0#a1a1a1"
-    print ""
-    for field in AIR_TEMPERATURE["fields"]:
-        print "%s.label %s" % (field["id"], field["label"])
+    init_base_parameters(AIR_TEMPERATURE)
     print ""
 
     # Relative humidity
     init_multigraph(HUMIDITY)
     print "graph_args --base 1000 --upper-limit 100 --lower-limit 0"
-    print ""
-    for field in HUMIDITY["fields"]:
-        print "%s.label %s" % (field["id"], field["label"])
-        print "%s.colour %s" % (field["id"], field["colour"])
+    init_base_parameters(HUMIDITY)
     print ""
 
     # Atmospheric pressure
     init_multigraph(ATM)
     print "graph_args --base 1000"
-    print ""
+    init_base_parameters(ATM)
     for field in ATM["fields"]:
-        print "%s.label %s" % (field["id"], field["label"])
-        print "%s.colour %s" % (field["id"], field["colour"])
-        print "%s.type GAUGE" % (field["id"])
         print "%s.draw AREA" % (field["id"])
     print ""
 
     # Intensity of rainfall
     init_multigraph(RAINFALL_INTENSITY)
     print "graph_args --base 1000 --upper-limit 100 --lower-limit 0"
-    print ""
+    init_base_parameters(RAINFALL_INTENSITY)
     for field in RAINFALL_INTENSITY["fields"]:
-        print "%s.label %s" % (field["id"], field["label"])
-        print "%s.colour %s" % (field["id"], field["colour"])
-        print "%s.type GAUGE" % (field["id"])
         print "%s.draw AREA" % (field["id"])
     print ""
 
     # Wind speed
     init_multigraph(WIND_SPEED)
     print "graph_args --base 1000 --upper-limit 20 --lower-limit 0"
-    print ""
+    init_base_parameters(WIND_SPEED)
     for field in WIND_SPEED["fields"]:
-        print "%s.label %s" % (field["id"], field["label"])
         print "%s.draw LINE%s" % (field["id"], field["thickness"])
-        print "%s.colour %s" % (field["id"], field["colour"])
     print ""
 
     # Radiological situation
     init_multigraph(RADIOLOGY)
     print "graph_args --base 1000 --lower-limit 0 --alt-y-grid"
-    print ""
-    for field in RADIOLOGY["fields"]:
-        print "%s.label %s" % (field["id"], field["label"])
-        print "%s.info %s" % (field["id"], field["info"])
+    init_base_parameters(RADIOLOGY)
     print ""
 
     # Production of electricity for current day/month
     init_multigraph(PRODUCTION_ELECTRICITY)
     print "graph_args --base 1000 --lower-limit 0"
-    print ""
+    init_base_parameters(PRODUCTION_ELECTRICITY)
     for field in PRODUCTION_ELECTRICITY["fields"]:
-        print "%s.label %s" % (field["id"], field["label"])
-        print "%s.type GAUGE" % (field["id"])
         print "%s.draw AREA" % (field["id"])
     print ""
 
@@ -172,6 +153,15 @@ def init_multigraph(config):
     if config["total"]:
         print "graph_total %s" % (config["total"])
     print "graph_scale %s" % (config["scale"])
+
+
+def init_base_parameters(config):
+    for field in config["fields"]:
+        print "%s.label %s" % (field["id"], field["label"])
+        if "colour" in field:
+            print "%s.colour %s" % (field["id"], get_color_value(field["colour"]))
+        if "info" in field:
+            print "%s.info %s" % (field["id"], field["info"])
 
 
 def get_values_multigraph(data, config, ratio=None):
@@ -254,6 +244,15 @@ def rnpp_node(config):
 
     logger.info('Finish rnpp-node (main)')
     sys.exit(0)
+
+
+def get_color_value(name):
+    if '.' in name:
+        parameter = name.split(".")
+        value = COLORS[parameter[0]][parameter[1]].replace("#", "")
+    else:
+        value = name
+    return value
 
 
 def main():

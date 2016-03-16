@@ -10,7 +10,7 @@
       "id": "rel_humidity",
       "label": "Relative humidity",
       "parameter": "M_RH_1M_AVG",
-      "colour": "COLOUR1"
+      "colour": "Indigo.500"
     }
   ]
 }

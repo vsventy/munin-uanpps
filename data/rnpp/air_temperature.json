@@ -9,7 +9,8 @@
     {
       "id": "air_temp",
       "label": "Air temperature",
-      "parameter": "M_TA_1M_AVG"
+      "parameter": "M_TA_1M_AVG",
+      "colour": "Indigo.500"
     }
   ]
 }

@@ -10,7 +10,7 @@
       "id": "rain_intensity",
       "label": "Intensity of rainfall",
       "parameter": "M_PW_INST",
-      "colour": "COLOUR1"
+      "colour": "Indigo.500"
     }
   ]
 }

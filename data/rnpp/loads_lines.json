@@ -9,17 +9,20 @@
     {
       "id": "l_kyiv",
       "label": "AL-750kV Kyiv",
-      "parameter": "L_KYIV"
+      "parameter": "L_KYIV",
+      "colour": "Green.A700"
     },
     {
       "id": "l_zu",
       "label": "AL-750kV Western-Ukrainian",
-      "parameter": "L_ZU"
+      "parameter": "L_ZU",
+      "colour": "Indigo.500"
     },
     {
       "id": "l_grabiv",
       "label": "AL-330kV Hrabiv",
-      "parameter": "L_GRABIV"
+      "parameter": "L_GRABIV",
+      "colour": "Orange.500"
     },
     {
       "id": "l_rivne",
@@ -64,7 +67,8 @@
     {
       "id": "l_own",
       "label": "Own needs",
-      "parameter": "RNPP_SN"
+      "parameter": "RNPP_SN",
+      "colour": "Brown.500"
     }
   ]
 }

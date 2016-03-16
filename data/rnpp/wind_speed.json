@@ -7,25 +7,25 @@
   "scale": "no",
   "fields": [
     {
+      "id": "wind_speed_max",
+      "label": "Wind speed (max)",
+      "parameter": "M_SPDMAX2M",
+      "thickness": 1,
+      "colour": "Purple.200"
+    },
+    {
       "id": "wind_speed_avg",
       "label": "Wind speed (avg)",
       "parameter": "M_SPDAVG2M",
       "thickness": 2,
-      "colour": "COLOUR5"
+      "colour": "Purple.500"
     },
     {
       "id": "wind_speed_min",
       "label": "Wind speed (min)",
       "parameter": "M_SPDMIN2M",
       "thickness": 1,
-      "colour": "COLOUR8"
-    },
-    {
-      "id": "wind_speed_max",
-      "label": "Wind speed (max)",
-      "parameter": "M_SPDMAX2M",
-      "thickness": 1,
-      "colour": "COLOUR16"
+      "colour": "Purple.100"
     }
   ]
 }

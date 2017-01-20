@@ -116,7 +116,7 @@ def display_config():
 
     # Intensity of rainfall
     init_multigraph(RAINFALL_INTENSITY)
-    print "graph_args --base 1000 --upper-limit 100 --lower-limit 0"
+    print "graph_args --base 1000 --upper-limit 5 --lower-limit 0"
     init_base_parameters(RAINFALL_INTENSITY)
     for field in RAINFALL_INTENSITY["fields"]:
         print "%s.draw AREA" % (field["id"])

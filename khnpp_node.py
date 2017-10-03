@@ -17,12 +17,12 @@ from core.utils import init_base_parameters
 from core.utils import init_multigraph
 from core.utils import load_json
 
-fileConfig('logging_config.ini')
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
+
+fileConfig(os.path.join(ROOT_PATH, 'logging_config.ini'))
 logger = logging.getLogger('khnpp-node')
 
-ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 ABSOLUTE_PATH = ROOT_PATH + '/data/khnpp/'
-
 AIR_TEMPERATURE = load_json(ABSOLUTE_PATH + 'air_temperature.json')
 ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')

@@ -1,0 +1,15 @@
+{
+  "id": "khnpp_air_temperature",
+  "title": "Khmelnitsky NPP Air temperature (in degrees Celsius)",
+  "category": "meteo",
+  "vlabel": "degrees Celsius",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "khnpp_air_temp",
+      "label": "Air temperature",
+      "colour": "Indigo.500"
+    }
+  ]
+}

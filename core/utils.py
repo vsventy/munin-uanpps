@@ -46,12 +46,15 @@ def init_base_parameters(config, colors):
 def get_values_multigraph(data, config, ratio=None):
     print('multigraph {}'.format(config['id']))
     for field in config['fields']:
-        if '.' in field['parameter']:
-            parameter = field['parameter'].split('.')
-            value = data[parameter[0]][parameter[1]]
+        if 'parameter' in field.keys():
+            if '.' in field['parameter']:
+                parameter = field['parameter'].split('.')
+                value = data[parameter[0]][parameter[1]]
+            else:
+                parameter = field['parameter']
+                value = data[parameter]
         else:
-            parameter = field['parameter']
-            value = data[parameter]
+            value = data
         try:
             value = float(value)
         except (TypeError, ValueError):

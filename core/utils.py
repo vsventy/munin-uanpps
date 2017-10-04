@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
+from __future__ import unicode_literals, print_function
 
+import httplib
 import json
 import logging
+import os
+import requests
 
-logger = logging.getLogger('uanpps.nodes')
+from fake_useragent import FakeUserAgentError
+from fake_useragent import UserAgent
+from logging.config import fileConfig
+
+ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+fileConfig(os.path.join(ROOT_PATH, 'logging_config.ini'))
+logger = logging.getLogger('uanpps-core')
 
 
 def load_json(full_path):
@@ -64,3 +74,21 @@ def get_values_multigraph(data, config, ratio=None):
         if ratio:
             value = float(value) * ratio
         print('{}.value {:.2f}'.format(field['id'], value))
+
+
+def enable_requests_logging():
+    httplib.HTTPConnection.debuglevel = 1
+    requests_log = logging.getLogger('requests.packages.urllib3')
+    requests_log.setLevel(logging.DEBUG)
+    requests.propagate = True
+
+
+def get_random_user_agent():
+    try:
+        user_agent = UserAgent()
+        user_agent = user_agent.random
+    except FakeUserAgentError:
+        user_agent = ('Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) '
+                      'Gecko/20100101 Firefox/41.0')
+    logger.debug('UserAgent = "%s"', user_agent)
+    return user_agent

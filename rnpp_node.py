@@ -1,24 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function
+from __future__ import unicode_literals, print_function
 
 import ast
-import os
-import sys
-import httplib
 import json
 import logging
+import os
 import requests
+import sys
 
-from logging.handlers import TimedRotatingFileHandler
-
-from fake_useragent import FakeUserAgentError
-from fake_useragent import UserAgent
-
+from core.utils import enable_requests_logging
+from core.utils import get_random_user_agent
 from core.utils import get_values_multigraph
 from core.utils import init_base_parameters
 from core.utils import init_multigraph
 from core.utils import load_json
+
+logger = logging.getLogger('rnpp-node')
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 ABSOLUTE_PATH = ROOT_PATH + '/data/rnpp/'
@@ -34,27 +32,6 @@ WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 PRODUCTION_ELECTRICITY = load_json(ABSOLUTE_PATH + 'production_electricity.json')
 COLORS = load_json(ROOT_PATH + '/data/colors.json')
-
-logger = logging.getLogger('uanpps.nodes')
-logHandler = TimedRotatingFileHandler(
-    ROOT_PATH + '/logs/rnpp-node.log',
-    when='D',
-    interval=1,
-    backupCount=5)
-logFormatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-logHandler.setFormatter(logFormatter)
-logger.addHandler(logHandler)
-logger.setLevel(logging.DEBUG)
-
-
-def enable_requests_logging():
-    httplib.HTTPConnection.debuglevel = 1
-
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
-    requests_log = logging.getLogger('requests.packages.urllib3')
-    requests_log.setLevel(logging.DEBUG)
-    requests.propagate = True
 
 
 def display_config():
@@ -205,14 +182,7 @@ def main():
         sys.exit(0)
 
     # init User-Agent
-    try:
-        user_agent = UserAgent()
-        user_agent = user_agent.random
-    except FakeUserAgentError:
-        user_agent = ('Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) '
-                      'Gecko/20100101 Firefox/41.0')
-
-    logger.debug('UserAgent = "%s"', user_agent)
+    user_agent = get_random_user_agent()
 
     # init config
     config = {

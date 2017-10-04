@@ -2,27 +2,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
+import ast
 import logging
 import os
 import sys
 import urllib2
 
 from bs4 import BeautifulSoup
-from fake_useragent import FakeUserAgentError
-from fake_useragent import UserAgent
-from logging.config import fileConfig
 
+from core.utils import enable_requests_logging
+from core.utils import get_random_user_agent
 from core.utils import get_values_multigraph
 from core.utils import init_base_parameters
 from core.utils import init_multigraph
 from core.utils import load_json
 
-ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-
-fileConfig(os.path.join(ROOT_PATH, 'logging_config.ini'))
 logger = logging.getLogger('khnpp-node')
 
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 ABSOLUTE_PATH = ROOT_PATH + '/data/khnpp/'
+
 AIR_TEMPERATURE = load_json(ABSOLUTE_PATH + 'air_temperature.json')
 ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
@@ -124,11 +123,11 @@ def khnpp_node(config):
     units_list.extend((unit_1, unit_2))
 
     # retrieve radiological situation
-    request = urllib2.Request(config['radiology_url'], headers=config['headers'])
+    request = urllib2.Request(config['radio_url'], headers=config['headers'])
     response = urllib2.urlopen(request).read()
     radiology_soup = BeautifulSoup(response, 'html.parser')
 
-    radiology_container = radiology_soup.find('div', class_='nucASKRO dataASKRO')
+    radiology_container = radiology_soup.find('div', class_='dataASKRO')
     radiology_items = radiology_container.find_all('div', class_='mesPoint')
 
     radiology_values = []
@@ -183,26 +182,20 @@ def main():
         sys.exit(0)
 
     # init User-Agent
-    try:
-        user_agent = UserAgent()
-        user_agent = user_agent.random
-    except FakeUserAgentError:
-        user_agent = ('Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) '
-                      'Gecko/20100101 Firefox/41.0')
-
-    logger.debug('UserAgent = "%s"', user_agent)
+    user_agent = get_random_user_agent()
 
     # init config
     config = {
         'host': os.environ.get('host', 'http://www.xaec.org.ua'),
-        'radiology_url': os.environ.get(
-            'radiology_url', 'http://www.xaec.org.ua/store/pages/ukr/nuccon'
-        ),
-        'meteo_url': os.environ.get(
-            'meteo_url', 'http://www.xaec.org.ua/store/pages/ukr/meteo'
-        ),
+        'logging': os.environ.get('uanpps_logging', 'False'),
+        'radio_url': os.environ.get('radio_url', 'http://www.xaec.org.ua/store/pages/ukr/nuccon'),
+        'meteo_url': os.environ.get('meteo_url', 'http://www.xaec.org.ua/store/pages/ukr/meteo'),
         'headers': {'User-Agent': user_agent}
     }
+
+    # turn on requests logging
+    if ast.literal_eval(config['logging']):
+        enable_requests_logging()
 
     khnpp_node(config)
 

@@ -28,6 +28,7 @@ ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
 LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
+RAINFALL_INTENSITY = load_json(ABSOLUTE_PATH + 'rainfall_intensity.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 COLORS = load_json(ROOT_PATH + '/data/colors.json')
 
@@ -60,6 +61,14 @@ def display_config():
     print('graph_args --base 1000')
     init_base_parameters(ATM, COLORS)
     for field in ATM['fields']:
+        print('{}.draw AREA'.format(field['id']))
+    print('')
+
+    # Intensity of rainfall
+    init_multigraph(RAINFALL_INTENSITY)
+    print('graph_args --base 1000 --upper-limit 5 --lower-limit 0')
+    init_base_parameters(RAINFALL_INTENSITY, COLORS)
+    for field in RAINFALL_INTENSITY['fields']:
         print('{}.draw AREA'.format(field['id']))
     print('')
 
@@ -127,6 +136,21 @@ def khnpp_node(config):
         item_text = item.find('div', class_='nucItemData').text.strip()
         radiology_values.append(item_text.split(' ', 1)[0])
 
+    # retrieve detail meteo parameters
+    request = urllib2.Request(config['meteo_url'], headers=config['headers'])
+    response = urllib2.urlopen(request).read()
+    meteo_soup = BeautifulSoup(response, 'html.parser')
+
+    meteo_detail_items = meteo_soup.find('div', class_='meteoData')\
+        .find_all('div', class_='smallItem')
+
+    meteo_detail_values = []
+    for item in meteo_detail_items:
+        item_text = item.find('div', class_='valueM').text.strip()
+        meteo_detail_values.append(item_text)
+
+    rainfall_intensity = meteo_detail_values[3]
+
     # Air temperature
     get_values_multigraph(air_temperature, AIR_TEMPERATURE)
 
@@ -135,6 +159,9 @@ def khnpp_node(config):
 
     # Relative humidity
     get_values_multigraph(humidity, HUMIDITY)
+
+    # Intensity of rainfall
+    get_values_multigraph(rainfall_intensity, RAINFALL_INTENSITY)
 
     # Wind speed
     get_values_multigraph(wind_speed, WIND_SPEED)
@@ -170,6 +197,9 @@ def main():
         'host': os.environ.get('host', 'http://www.xaec.org.ua'),
         'radiology_url': os.environ.get(
             'radiology_url', 'http://www.xaec.org.ua/store/pages/ukr/nuccon'
+        ),
+        'meteo_url': os.environ.get(
+            'meteo_url', 'http://www.xaec.org.ua/store/pages/ukr/meteo'
         ),
         'headers': {'User-Agent': user_agent}
     }

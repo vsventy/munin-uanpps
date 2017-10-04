@@ -1,0 +1,15 @@
+{
+  "id": "khnpp_rainfall_intensity",
+  "title": "Khmelnitsky NPP Intensity of rainfall (in mm/h)",
+  "category": "meteo",
+  "vlabel": "millimeter per hour (mm/h)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "khnpp_rain_intensity",
+      "label": "Intensity of rainfall",
+      "colour": "Indigo.500"
+    }
+  ]
+}

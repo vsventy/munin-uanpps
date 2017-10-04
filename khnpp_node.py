@@ -27,6 +27,7 @@ AIR_TEMPERATURE = load_json(ABSOLUTE_PATH + 'air_temperature.json')
 ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
 LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
+RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 COLORS = load_json(ROOT_PATH + '/data/colors.json')
 
@@ -78,6 +79,12 @@ def display_config():
         print('{}.min 0'.format(field['id']))
     print('')
 
+    # Radiological situation
+    init_multigraph(RADIOLOGY)
+    print('graph_args --base 1000 --lower-limit 0 --alt-y-grid')
+    init_base_parameters(RADIOLOGY, COLORS)
+    print('')
+
 
 def khnpp_node(config):
     logger.info('Start khnpp-node (main)')
@@ -107,6 +114,19 @@ def khnpp_node(config):
     unit_2 = perform_data[2][1].split(' ', 1)[0]
     units_list.extend((unit_1, unit_2))
 
+    # retrieve radiological situation
+    request = urllib2.Request(config['radiology_url'], headers=config['headers'])
+    response = urllib2.urlopen(request).read()
+    radiology_soup = BeautifulSoup(response, 'html.parser')
+
+    radiology_container = radiology_soup.find('div', class_='nucASKRO dataASKRO')
+    radiology_items = radiology_container.find_all('div', class_='mesPoint')
+
+    radiology_values = []
+    for item in radiology_items:
+        item_text = item.find('div', class_='nucItemData').text.strip()
+        radiology_values.append(item_text.split(' ', 1)[0])
+
     # Air temperature
     get_values_multigraph(air_temperature, AIR_TEMPERATURE)
 
@@ -121,6 +141,9 @@ def khnpp_node(config):
 
     # Loads Units
     get_values_multigraph(units_list, LOADS_UNITS)
+
+    # Radiological situation
+    get_values_multigraph(radiology_values, RADIOLOGY)
 
     logger.info('Finish khnpp-node (main)')
     sys.exit(0)
@@ -145,6 +168,9 @@ def main():
     # init config
     config = {
         'host': os.environ.get('host', 'http://www.xaec.org.ua'),
+        'radiology_url': os.environ.get(
+            'radiology_url', 'http://www.xaec.org.ua/store/pages/ukr/nuccon'
+        ),
         'headers': {'User-Agent': user_agent}
     }
 

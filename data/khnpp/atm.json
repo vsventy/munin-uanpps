@@ -1,0 +1,15 @@
+{
+  "id": "khnpp_atm",
+  "title": "Khmelnitsky NPP Atmospheric pressure (in mmHg)",
+  "category": "meteo",
+  "vlabel": "millimeter of mercury (mmHg)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "khnpp_atm",
+      "label": "Atmospheric pressure",
+      "colour": "Amber.500"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "khnpp_relative_humidity",
+  "title": "Khmelnitsky NPP Relative humidity (in %)",
+  "category": "meteo",
+  "vlabel": "%",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "khnpp_rel_humidity",
+      "label": "Relative humidity",
+      "colour": "Indigo.500"
+    }
+  ]
+}

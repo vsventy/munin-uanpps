@@ -45,7 +45,7 @@ def init_base_parameters(config, colors):
 
 def get_values_multigraph(data, config, ratio=None):
     print('multigraph {}'.format(config['id']))
-    for field in config['fields']:
+    for i, field in enumerate(config['fields']):
         if 'parameter' in field.keys():
             if '.' in field['parameter']:
                 parameter = field['parameter'].split('.')
@@ -54,7 +54,7 @@ def get_values_multigraph(data, config, ratio=None):
                 parameter = field['parameter']
                 value = data[parameter]
         else:
-            value = data
+            value = data[i] if isinstance(data, list) else data
         try:
             value = float(value)
         except (TypeError, ValueError):

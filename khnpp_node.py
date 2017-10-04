@@ -26,6 +26,7 @@ ABSOLUTE_PATH = ROOT_PATH + '/data/khnpp/'
 AIR_TEMPERATURE = load_json(ABSOLUTE_PATH + 'air_temperature.json')
 ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
+LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 COLORS = load_json(ROOT_PATH + '/data/colors.json')
 
@@ -69,6 +70,14 @@ def display_config():
         print('{}.draw LINE{}'.format(field['id'], field['thickness']))
     print('')
 
+    # Loads Units
+    init_multigraph(LOADS_UNITS)
+    print('graph_args --base 1000 --lower-limit 0')
+    init_base_parameters(LOADS_UNITS, COLORS)
+    for field in LOADS_UNITS['fields']:
+        print('{}.min 0'.format(field['id']))
+    print('')
+
 
 def khnpp_node(config):
     logger.info('Start khnpp-node (main)')
@@ -87,6 +96,17 @@ def khnpp_node(config):
     humidity = meteo_data[3][1].split(' ', 1)[0]
     atmospheric_pressure = meteo_data[4][1].split(' ', 1)[0]
 
+    # retrieve performance parameters
+    perform_container = soup.find_all('div', class_='latest-projects-list')[0]\
+        .find_all('ul')[0].find_all('li')[0].find('div')
+    perform_table_rows = perform_container.find('table').find_all('tr')
+    perform_data = get_lists_of_values(perform_table_rows)
+
+    units_list = []
+    unit_1 = perform_data[1][1].split(' ', 1)[0]
+    unit_2 = perform_data[2][1].split(' ', 1)[0]
+    units_list.extend((unit_1, unit_2))
+
     # Air temperature
     get_values_multigraph(air_temperature, AIR_TEMPERATURE)
 
@@ -98,6 +118,9 @@ def khnpp_node(config):
 
     # Wind speed
     get_values_multigraph(wind_speed, WIND_SPEED)
+
+    # Loads Units
+    get_values_multigraph(units_list, LOADS_UNITS)
 
     logger.info('Finish khnpp-node (main)')
     sys.exit(0)

@@ -1,0 +1,20 @@
+{
+  "id": "khnpp_loads_units",
+  "title": "Khmelnitsky NPP Loads Units (in MW)",
+  "category": "performance",
+  "vlabel": "megawatts (MW)",
+  "total": "Total plant load",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "khnpp_unit1",
+      "label": "Unit 1",
+      "colour": "Brown.500"
+    },
+    {
+      "id": "khnpp_unit2",
+      "label": "Unit 2",
+      "colour": "Orange.500"
+    }
+  ]
+}

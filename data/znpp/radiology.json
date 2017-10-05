@@ -1,0 +1,9 @@
+{
+  "id": "znpp_radiology",
+  "title": "Zaporizhzhya NPP Radiological situation (in uSv/h)",
+  "category": "radiology",
+  "vlabel": "microsieverts per hour (uSv/h)",
+  "total": "",
+  "scale": "no",
+  "fields": []
+}

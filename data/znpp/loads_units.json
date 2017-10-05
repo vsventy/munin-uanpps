@@ -1,0 +1,40 @@
+{
+  "id": "znpp_loads_units",
+  "title": "Zaporizhzhya NPP Loads Units (in MW)",
+  "category": "performance",
+  "vlabel": "megawatts (MW)",
+  "total": "Total plant load",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "znpp_unit1",
+      "label": "Unit 1",
+      "colour": "Brown.500"
+    },
+    {
+      "id": "znpp_unit2",
+      "label": "Unit 2",
+      "colour": "Orange.500"
+    },
+    {
+      "id": "znpp_unit3",
+      "label": "Unit 3",
+      "colour": "Indigo.500"
+    },
+    {
+      "id": "znpp_unit4",
+      "label": "Unit 4",
+      "colour": "Purple.500"
+    },
+    {
+      "id": "znpp_unit5",
+      "label": "Unit 5",
+      "colour": "Grey.500"
+    },
+    {
+      "id": "znpp_unit6",
+      "label": "Unit 6",
+      "colour": "Amber.500"
+    }
+  ]
+}

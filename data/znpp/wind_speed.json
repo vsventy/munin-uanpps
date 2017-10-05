@@ -1,0 +1,22 @@
+{
+  "id": "znpp_wind_speed",
+  "title": "Zaporizhzhya NPP Wind speed (in m/s)",
+  "category": "meteo",
+  "vlabel": "meters per second (m/s)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "znpp_wind_speed_avg",
+      "label": "Wind speed (avg)",
+      "thickness": 2,
+      "colour": "Purple.500"
+    },
+    {
+      "id": "znpp_wind_speed_max",
+      "label": "Wind speed (max)",
+      "thickness": 1,
+      "colour": "Purple.200"
+    }
+  ]
+}

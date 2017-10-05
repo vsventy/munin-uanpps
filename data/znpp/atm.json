@@ -1,0 +1,15 @@
+{
+  "id": "znpp_atm",
+  "title": "Zaporizhzhya NPP Atmospheric pressure (in mmHg)",
+  "category": "meteo",
+  "vlabel": "millimeter of mercury (mmHg)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "znpp_atm",
+      "label": "Atmospheric pressure",
+      "colour": "Amber.500"
+    }
+  ]
+}

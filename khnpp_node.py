@@ -11,6 +11,7 @@ import urllib2
 from bs4 import BeautifulSoup
 
 from core.utils import enable_requests_logging
+from core.utils import get_lists_of_values
 from core.utils import get_random_user_agent
 from core.utils import get_values_multigraph
 from core.utils import init_base_parameters
@@ -30,15 +31,6 @@ RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 RAINFALL_INTENSITY = load_json(ABSOLUTE_PATH + 'rainfall_intensity.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 COLORS = load_json(ROOT_PATH + '/data/colors.json')
-
-
-def get_lists_of_values(html_table_rows):
-    values_list = []
-    for row in html_table_rows:
-        cols = row.find_all('td')
-        cols = [elem.text.strip() for elem in cols]
-        values_list.append([elem for elem in cols if elem])
-    return values_list
 
 
 def display_config():

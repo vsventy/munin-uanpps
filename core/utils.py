@@ -32,6 +32,15 @@ def init_multigraph(config):
     print('graph_scale {}'.format(config['scale']))
 
 
+def get_lists_of_values(html_table_rows):
+    values_list = []
+    for row in html_table_rows:
+        cols = row.find_all('td')
+        cols = [elem.text.strip() for elem in cols]
+        values_list.append([elem for elem in cols if elem])
+    return values_list
+
+
 def get_color_value(colors, name):
     if '.' in name:
         parameter = name.split('.')
@@ -66,6 +75,8 @@ def get_values_multigraph(data, config, ratio=None):
         else:
             value = data[i] if isinstance(data, list) else data
         try:
+            if isinstance(value, (str, unicode)):
+                value = value.replace(',', '.')
             value = float(value)
         except (TypeError, ValueError):
             logger.error('Invalid value for field \'%s\': %s=%s',

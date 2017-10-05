@@ -62,6 +62,14 @@ def display_config():
         print('{}.draw LINE{}'.format(field['id'], field['thickness']))
     print('')
 
+    # Loads Units
+    init_multigraph(LOADS_UNITS)
+    print('graph_args --base 1000 --lower-limit 0')
+    init_base_parameters(LOADS_UNITS, COLORS)
+    for field in LOADS_UNITS['fields']:
+        print('{}.min 0'.format(field['id']))
+    print('')
+
 
 def znpp_node(config):
     logger.info('Start znpp-node (main)')
@@ -85,6 +93,24 @@ def znpp_node(config):
     wind_speed_max = meteo_data[5][1].split(' ')[4]
     wind_speed_list.extend((wind_speed_avg, wind_speed_max))
 
+    # retrieve performance parameters
+    request = urllib2.Request(config['perform_url'], headers=config['headers'])
+    response = urllib2.urlopen(request).read()
+    perform_soup = BeautifulSoup(response, 'html.parser')
+
+    perform_container = perform_soup.find(
+        name='h1',
+        string='Навантаження по блоках').parent
+    perform_table_rows = perform_container.find('table').find_all('tr')
+    perform_data = get_lists_of_values(perform_table_rows)
+
+    units_list = []
+    iter_perform = iter(perform_data)
+    iter_perform.next()  # skip header row
+    for item in iter_perform:
+        value = item[2] if len(item) > 2 else 0
+        units_list.append(value)
+
     # Air temperature
     get_values_multigraph(air_temperature, AIR_TEMPERATURE)
 
@@ -96,6 +122,9 @@ def znpp_node(config):
 
     # Wind speed
     get_values_multigraph(wind_speed_list, WIND_SPEED)
+
+    # Loads Units
+    get_values_multigraph(units_list, LOADS_UNITS)
 
     logger.info('Finish znpp-node (main)')
     sys.exit(0)

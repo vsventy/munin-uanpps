@@ -52,7 +52,11 @@ def get_color_value(colors, name):
 
 def init_base_parameters(config, colors):
     for field in config['fields']:
-        print('{}.label {}'.format(field['id'], field['label']))
+        try:
+            print('{}.label {}'.format(field['id'], field['label']))
+        except UnicodeEncodeError:
+            logger.exception('Encoding error for field %s', field['id'])
+            continue
         if 'colour' in field:
             print('{}.colour {}'.format(
                 field['id'],

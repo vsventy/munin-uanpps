@@ -27,6 +27,7 @@ AIR_TEMPERATURE = load_json(ABSOLUTE_PATH + 'air_temperature.json')
 ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
 LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
+RADIOLOGY_30KM = load_json(ABSOLUTE_PATH + 'radiology_30km.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 COLORS = load_json(ROOT_PATH + '/data/colors.json')
@@ -70,7 +71,13 @@ def display_config():
         print('{}.min 0'.format(field['id']))
     print('')
 
-    # Radiological situation
+    # Radiological situation (30-km)
+    init_multigraph(RADIOLOGY_30KM)
+    print('graph_args --base 1000 --lower-limit 0 --alt-y-grid')
+    init_base_parameters(RADIOLOGY_30KM, COLORS)
+    print('')
+
+    # Radiological situation (industrial site)
     init_multigraph(RADIOLOGY)
     print('graph_args --base 1000 --lower-limit 0 --alt-y-grid')
     init_base_parameters(RADIOLOGY, COLORS)
@@ -127,6 +134,16 @@ def znpp_node(config):
         string='30-км зона навколо ЗАЕС').parent
     radiology_items = radiology_container.find_all('a', class_='ascro-tt')
 
+    radiology_values_30km = []
+    for item in radiology_items:
+        item_text = item.text.strip()
+        radiology_values_30km.append(item_text)
+
+    radiology_container = radiology_soup.find(
+        name='h1',
+        string='Проммайданчик ЗАЕС').parent
+    radiology_items = radiology_container.find_all('a', class_='ascro-tt')
+
     radiology_values = []
     for item in radiology_items:
         item_text = item.text.strip()
@@ -147,7 +164,10 @@ def znpp_node(config):
     # Loads Units
     get_values_multigraph(units_list, LOADS_UNITS)
 
-    # Radiological situation
+    # Radiological situation (30-km)
+    get_values_multigraph(radiology_values_30km, RADIOLOGY_30KM, 0.01)
+
+    # Radiological situation (industrial site)
     get_values_multigraph(radiology_values, RADIOLOGY, 0.01)
 
     logger.info('Finish znpp-node (main)')

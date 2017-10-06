@@ -79,8 +79,8 @@ def get_values_multigraph(data, config, ratio=None):
                 value = value.replace(',', '.')
             value = float(value)
         except (TypeError, ValueError):
-            logger.error('Invalid value for field \'%s\': %s=%s',
-                         field['id'], parameter, value)
+            logger.error('Invalid value for field \'%s\': %s',
+                         field['id'], value)
             continue
         if ratio:
             value = float(value) * ratio

@@ -70,6 +70,12 @@ def display_config():
         print('{}.min 0'.format(field['id']))
     print('')
 
+    # Radiological situation
+    init_multigraph(RADIOLOGY)
+    print('graph_args --base 1000 --lower-limit 0 --alt-y-grid')
+    init_base_parameters(RADIOLOGY, COLORS)
+    print('')
+
 
 def znpp_node(config):
     logger.info('Start znpp-node (main)')
@@ -111,6 +117,21 @@ def znpp_node(config):
         value = item[2] if len(item) > 2 else 0
         units_list.append(value)
 
+    # retrieve radiological situation
+    request = urllib2.Request(config['radio_url'], headers=config['headers'])
+    response = urllib2.urlopen(request).read()
+    radiology_soup = BeautifulSoup(response, 'html.parser')
+
+    radiology_container = radiology_soup.find(
+        name='h1',
+        string='30-км зона навколо ЗАЕС').parent
+    radiology_items = radiology_container.find_all('a', class_='ascro-tt')
+
+    radiology_values = []
+    for item in radiology_items:
+        item_text = item.text.strip()
+        radiology_values.append(item_text)
+
     # Air temperature
     get_values_multigraph(air_temperature, AIR_TEMPERATURE)
 
@@ -125,6 +146,9 @@ def znpp_node(config):
 
     # Loads Units
     get_values_multigraph(units_list, LOADS_UNITS)
+
+    # Radiological situation
+    get_values_multigraph(radiology_values, RADIOLOGY, 0.01)
 
     logger.info('Finish znpp-node (main)')
     sys.exit(0)

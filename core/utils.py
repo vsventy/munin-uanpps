@@ -73,14 +73,19 @@ def get_values_multigraph(data, config, ratio=None):
                 parameter = field['parameter']
                 value = data[parameter]
         else:
-            value = data[i] if isinstance(data, list) else data
+            try:
+                value = data[i] if isinstance(data, list) else data
+            except IndexError:
+                logger.exception('Mismatch data for field \'%s\': %s',
+                                 field['id'], data)
+                break
         try:
             if isinstance(value, (str, unicode)):
                 value = value.replace(',', '.')
             value = float(value)
         except (TypeError, ValueError):
-            logger.error('Invalid value for field \'%s\': %s',
-                         field['id'], value)
+            logger.exception('Invalid value for field \'%s\': %s',
+                             field['id'], value)
             continue
         if ratio:
             value = float(value) * ratio

@@ -1,9 +1,80 @@
 {
   "id": "znpp_radiology",
-  "title": "Zaporizhzhya NPP Radiological situation (in uSv/h)",
+  "title": "Zaporizhzhya NPP Radiological situation, 30-km area (in uSv/h)",
   "category": "radiology",
   "vlabel": "microsieverts per hour (uSv/h)",
   "total": "",
   "scale": "no",
-  "fields": []
+  "fields": [
+    {
+      "id": "znpp_michurino",
+      "label": "Michurino",
+      "info": ""
+    },
+    {
+      "id": "znpp_vodyane",
+      "label": "Vodyane",
+      "info": ""
+    },
+    {
+      "id": "znpp_kamyanka_dniprovska",
+      "label": "Kamyanka-Dniprovska",
+      "info": ""
+    },
+    {
+      "id": "znpp_znamyanka",
+      "label": "Znamyanka",
+      "info": ""
+    },
+    {
+      "id": "znpp_greenhouses",
+      "label": "ZNPP greenhouses",
+      "info": ""
+    },
+    {
+      "id": "znpp_ivanivka",
+      "label": "Ivanivka",
+      "info": ""
+    },
+    {
+      "id": "znpp_recreation_center",
+      "label": "Zaporizhzhya TPP recreation center",
+      "info": ""
+    },
+    {
+      "id": "znpp_power_substation_luch",
+      "label": "Power substation Luch",
+      "info": ""
+    },
+    {
+      "id": "znpp_sewage_disposal_plant",
+      "label": "Sewage disposal plant",
+      "info": ""
+    },
+    {
+      "id": "znpp_external_laboratory",
+      "label": "ZNPP external radiation monitoring laboratory",
+      "info": ""
+    },
+    {
+      "id": "znpp_nikopol",
+      "label": "Nikopol",
+      "info": ""
+    },
+    {
+      "id": "znpp_marganets",
+      "label": "Marganets",
+      "info": ""
+    },
+    {
+      "id": "znpp_cooling_towers",
+      "label": "ZNPP cooling towers",
+      "info": ""
+    },
+    {
+      "id": "znpp_31_ffrb",
+      "label": "31-FFRB",
+      "info": ""
+    }
+  ]
 }

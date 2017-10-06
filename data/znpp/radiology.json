@@ -88,32 +88,32 @@
     },
     {
       "id": "znpp_upp_6",
-      "label": "Point at the upp-6",
+      "label": "Point at the unit pumping plant 6",
       "info": ""
     },
     {
       "id": "znpp_upp5_upp6",
-      "label": "Point between the upp-5 and upp-6",
+      "label": "Point between the unit pumping plants 5 and 6",
       "info": ""
     },
     {
       "id": "znpp_upp4_upp5",
-      "label": "Point between the upp-4 and upp-5",
+      "label": "Point between the unit pumping plants 4 and 5",
       "info": ""
     },
     {
       "id": "znpp_upp3_upp4",
-      "label": "Point between the upp-3 and upp-4",
+      "label": "Point between the unit pumping plants 3 and 4",
       "info": ""
     },
     {
       "id": "znpp_upp2_upp3",
-      "label": "Point between the upp-2 and upp-3",
+      "label": "Point between the unit pumping plants 2 and 6",
       "info": ""
     },
     {
       "id": "znpp_upp1_upp2",
-      "label": "Point between the upp-1 and upp-2",
+      "label": "Point between the unit pumping plants 1 and 2",
       "info": ""
     },
     {

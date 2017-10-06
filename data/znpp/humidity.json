@@ -1,0 +1,15 @@
+{
+  "id": "znpp_relative_humidity",
+  "title": "Zaporizhzhya NPP Relative humidity (in %)",
+  "category": "meteo",
+  "vlabel": "%",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "znpp_rel_humidity",
+      "label": "Relative humidity",
+      "colour": "Indigo.500"
+    }
+  ]
+}

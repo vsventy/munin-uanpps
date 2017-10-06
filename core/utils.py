@@ -32,6 +32,15 @@ def init_multigraph(config):
     print('graph_scale {}'.format(config['scale']))
 
 
+def get_lists_of_values(html_table_rows):
+    values_list = []
+    for row in html_table_rows:
+        cols = row.find_all('td')
+        cols = [elem.text.strip() for elem in cols]
+        values_list.append([elem for elem in cols if elem])
+    return values_list
+
+
 def get_color_value(colors, name):
     if '.' in name:
         parameter = name.split('.')
@@ -43,7 +52,11 @@ def get_color_value(colors, name):
 
 def init_base_parameters(config, colors):
     for field in config['fields']:
-        print('{}.label {}'.format(field['id'], field['label']))
+        try:
+            print('{}.label {}'.format(field['id'], field['label']))
+        except UnicodeEncodeError:
+            logger.exception('Encoding error for field %s', field['id'])
+            continue
         if 'colour' in field:
             print('{}.colour {}'.format(
                 field['id'],
@@ -64,12 +77,19 @@ def get_values_multigraph(data, config, ratio=None):
                 parameter = field['parameter']
                 value = data[parameter]
         else:
-            value = data[i] if isinstance(data, list) else data
+            try:
+                value = data[i] if isinstance(data, list) else data
+            except IndexError:
+                logger.exception('Mismatch data for field \'%s\': %s',
+                                 field['id'], data)
+                break
         try:
+            if isinstance(value, (str, unicode)):
+                value = value.replace(',', '.')
             value = float(value)
         except (TypeError, ValueError):
-            logger.error('Invalid value for field \'%s\': %s=%s',
-                         field['id'], parameter, value)
+            logger.exception('Invalid value for field \'%s\': %s',
+                             field['id'], value)
             continue
         if ratio:
             value = float(value) * ratio

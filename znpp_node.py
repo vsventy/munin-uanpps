@@ -18,17 +18,17 @@ from core.utils import init_base_parameters
 from core.utils import init_multigraph
 from core.utils import load_json
 
-logger = logging.getLogger('khnpp-node')
+logger = logging.getLogger('znpp-node')
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-ABSOLUTE_PATH = ROOT_PATH + '/data/khnpp/'
+ABSOLUTE_PATH = ROOT_PATH + '/data/znpp/'
 
 AIR_TEMPERATURE = load_json(ABSOLUTE_PATH + 'air_temperature.json')
 ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
 LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
+RADIOLOGY_30KM = load_json(ABSOLUTE_PATH + 'radiology_30km.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
-RAINFALL_INTENSITY = load_json(ABSOLUTE_PATH + 'rainfall_intensity.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 COLORS = load_json(ROOT_PATH + '/data/colors.json')
 
@@ -55,14 +55,6 @@ def display_config():
         print('{}.draw AREA'.format(field['id']))
     print('')
 
-    # Intensity of rainfall
-    init_multigraph(RAINFALL_INTENSITY)
-    print('graph_args --base 1000 --upper-limit 5 --lower-limit 0')
-    init_base_parameters(RAINFALL_INTENSITY, COLORS)
-    for field in RAINFALL_INTENSITY['fields']:
-        print('{}.draw AREA'.format(field['id']))
-    print('')
-
     # Wind speed
     init_multigraph(WIND_SPEED)
     print('graph_args --base 1000 --upper-limit 20 --lower-limit 0')
@@ -79,91 +71,106 @@ def display_config():
         print('{}.min 0'.format(field['id']))
     print('')
 
-    # Radiological situation
+    # Radiological situation (30-km)
+    init_multigraph(RADIOLOGY_30KM)
+    print('graph_args --base 1000 --lower-limit 0 --alt-y-grid')
+    init_base_parameters(RADIOLOGY_30KM, COLORS)
+    print('')
+
+    # Radiological situation (industrial site)
     init_multigraph(RADIOLOGY)
     print('graph_args --base 1000 --lower-limit 0 --alt-y-grid')
     init_base_parameters(RADIOLOGY, COLORS)
     print('')
 
 
-def khnpp_node(config):
-    logger.info('Start khnpp-node (main)')
-
-    request = urllib2.Request(config['host'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
-    soup = BeautifulSoup(response, 'html.parser')
+def znpp_node(config):
+    logger.info('Start znpp-node (main)')
 
     # retrieve meteo parameters
-    meteo_container = soup.find(id='lightmeteo')
+    request = urllib2.Request(config['meteo_url'], headers=config['headers'])
+    response = urllib2.urlopen(request).read()
+    meteo_soup = BeautifulSoup(response, 'html.parser')
+
+    meteo_container = meteo_soup.find('div', class_='span9')\
+        .find('div', class_='span7 offset1')
     meteo_table_rows = meteo_container.find('table').find_all('tr')
     meteo_data = get_lists_of_values(meteo_table_rows)
 
-    air_temperature = meteo_data[1][1].split(' ', 1)[0]
-    wind_speed = meteo_data[2][1].split(' ', 1)[0]
+    air_temperature = meteo_data[0][1].split(' ', 1)[0]
     humidity = meteo_data[3][1].split(' ', 1)[0]
     atmospheric_pressure = meteo_data[4][1].split(' ', 1)[0]
 
+    wind_speed_list = []
+    wind_speed_avg = meteo_data[5][1].split(' ', 1)[0]
+    wind_speed_max = meteo_data[5][1].split(' ')[4]
+    wind_speed_list.extend((wind_speed_avg, wind_speed_max))
+
     # retrieve performance parameters
-    perform_container = soup.find_all('div', class_='latest-projects-list')[0]\
-        .find_all('ul')[0].find_all('li')[0].find('div')
+    request = urllib2.Request(config['perform_url'], headers=config['headers'])
+    response = urllib2.urlopen(request).read()
+    perform_soup = BeautifulSoup(response, 'html.parser')
+
+    perform_container = perform_soup.find(
+        name='h1',
+        string='Навантаження по блоках').parent
     perform_table_rows = perform_container.find('table').find_all('tr')
     perform_data = get_lists_of_values(perform_table_rows)
 
     units_list = []
-    unit_1 = perform_data[1][1].split(' ', 1)[0]
-    unit_2 = perform_data[2][1].split(' ', 1)[0]
-    units_list.extend((unit_1, unit_2))
+    iter_perform = iter(perform_data)
+    iter_perform.next()  # skip header row
+    for item in iter_perform:
+        value = item[2] if len(item) > 2 else 0
+        units_list.append(value)
 
     # retrieve radiological situation
     request = urllib2.Request(config['radio_url'], headers=config['headers'])
     response = urllib2.urlopen(request).read()
     radiology_soup = BeautifulSoup(response, 'html.parser')
 
-    radiology_container = radiology_soup.find('div', class_='dataASKRO')
-    radiology_items = radiology_container.find_all('div', class_='mesPoint')
+    radiology_container = radiology_soup.find(
+        name='h1',
+        string='30-км зона навколо ЗАЕС').parent
+    radiology_items = radiology_container.find_all('a', class_='ascro-tt')
+
+    radiology_values_30km = []
+    for item in radiology_items:
+        item_text = item.text.strip()
+        radiology_values_30km.append(item_text)
+
+    radiology_container = radiology_soup.find(
+        name='h1',
+        string='Проммайданчик ЗАЕС').parent
+    radiology_items = radiology_container.find_all('a', class_='ascro-tt')
 
     radiology_values = []
     for item in radiology_items:
-        item_text = item.find('div', class_='nucItemData').text.strip()
-        radiology_values.append(item_text.split(' ', 1)[0])
-
-    # retrieve detail meteo parameters
-    request = urllib2.Request(config['meteo_url'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
-    meteo_soup = BeautifulSoup(response, 'html.parser')
-
-    meteo_detail_items = meteo_soup.find('div', class_='meteoData')\
-        .find_all('div', class_='smallItem')
-
-    meteo_detail_values = []
-    for item in meteo_detail_items:
-        item_text = item.find('div', class_='valueM').text.strip()
-        meteo_detail_values.append(item_text)
-
-    rainfall_intensity = meteo_detail_values[3]
+        item_text = item.text.strip()
+        radiology_values.append(item_text)
 
     # Air temperature
     get_values_multigraph(air_temperature, AIR_TEMPERATURE)
 
     # Atmospheric pressure (convert hectopascals to millimeter of mercury)
-    get_values_multigraph(atmospheric_pressure, ATM, 0.7500637554192)
+    get_values_multigraph(atmospheric_pressure, ATM)
 
     # Relative humidity
     get_values_multigraph(humidity, HUMIDITY)
 
-    # Intensity of rainfall
-    get_values_multigraph(rainfall_intensity, RAINFALL_INTENSITY)
-
     # Wind speed
-    get_values_multigraph(wind_speed, WIND_SPEED)
+    get_values_multigraph(wind_speed_list, WIND_SPEED)
 
     # Loads Units
     get_values_multigraph(units_list, LOADS_UNITS)
 
-    # Radiological situation
-    get_values_multigraph(radiology_values, RADIOLOGY)
+    # Radiological situation (30-km)
+    get_values_multigraph(radiology_values_30km, RADIOLOGY_30KM, 0.01)
 
-    logger.info('Finish khnpp-node (main)')
+    # Radiological situation (industrial site)
+    get_values_multigraph(radiology_values, RADIOLOGY, 0.01)
+
+    logger.info('Finish znpp-node (main)')
     sys.exit(0)
 
 
@@ -178,10 +185,10 @@ def main():
 
     # init config
     config = {
-        'host': os.environ.get('host', 'http://www.xaec.org.ua'),
         'logging': os.environ.get('uanpps_logging', 'False'),
-        'radio_url': os.environ.get('radio_url', 'http://www.xaec.org.ua/store/pages/ukr/nuccon'),
-        'meteo_url': os.environ.get('meteo_url', 'http://www.xaec.org.ua/store/pages/ukr/meteo'),
+        'perform_url': os.environ.get('perform_url', 'http://www.npp.zp.ua/Home/Production'),
+        'meteo_url': os.environ.get('meteo_url', 'http://www.npp.zp.ua/Weather'),
+        'radio_url': os.environ.get('radio_url', 'http://www.npp.zp.ua/Home/Ascro'),
         'headers': {'User-Agent': user_agent}
     }
 
@@ -189,7 +196,7 @@ def main():
     if ast.literal_eval(config['logging']):
         enable_requests_logging()
 
-    khnpp_node(config)
+    znpp_node(config)
 
 if __name__ == '__main__':
     main()

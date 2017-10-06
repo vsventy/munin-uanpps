@@ -1,0 +1,15 @@
+{
+  "id": "znpp_air_temperature",
+  "title": "Zaporizhzhya NPP Air temperature (in degrees Celsius)",
+  "category": "meteo",
+  "vlabel": "degrees Celsius",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "znpp_air_temp",
+      "label": "Air temperature",
+      "colour": "Indigo.500"
+    }
+  ]
+}

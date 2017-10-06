@@ -1,0 +1,130 @@
+{
+  "id": "znpp_radiology_industrial_site",
+  "title": "Zaporizhzhya NPP Radiological situation, industrial site (in uSv/h)",
+  "category": "radiology",
+  "vlabel": "microsieverts per hour (uSv/h)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "znpp_trans_gate_4",
+      "label": "Transport check gate N4",
+      "info": ""
+    },
+    {
+      "id": "znpp_sfds_east_site",
+      "label": "SFDS eastern site",
+      "info": ""
+    },
+    {
+      "id": "znpp_sfds_north_site",
+      "label": "SFDS northern site",
+      "info": ""
+    },
+    {
+      "id": "znpp_railway_gate_6",
+      "label": "Heavy equipment site, railway check gate N6",
+      "info": ""
+    },
+    {
+      "id": "znpp_trans_gate_5",
+      "label": "Transport check gate N5",
+      "info": ""
+    },
+    {
+      "id": "znpp_post_21",
+      "label": "Monitoring post N21 - NPP north part",
+      "info": ""
+    },
+    {
+      "id": "znpp_railway_gate_sect_6",
+      "label": "Railway check gate, sector N6",
+      "info": ""
+    },
+    {
+      "id": "znpp_nitro_oxygen_plant",
+      "label": "Point opposite the nitrogen-oxygen plant",
+      "info": ""
+    },
+    {
+      "id": "znpp_railway_gate_sect_5",
+      "label": "Railway check gate, sector N5",
+      "info": ""
+    },
+    {
+      "id": "znpp_post_22",
+      "label": "Monitoring post N22 - NPP south part",
+      "info": ""
+    },
+    {
+      "id": "znpp_trans_gate_3",
+      "label": "Transport check gate N3",
+      "info": ""
+    },
+    {
+      "id": "znpp_perimeter_corner",
+      "label": "Perimeter corner at the military unit",
+      "info": ""
+    },
+    {
+      "id": "znpp_pk_23",
+      "label": "Point opposite PK 23",
+      "info": ""
+    },
+    {
+      "id": "znpp_sprinkl_pond_1",
+      "label": "Point opposite the sprinkling pond N1",
+      "info": ""
+    },
+    {
+      "id": "znpp_sprinkl_pond_2",
+      "label": "Point opposite the sprinkling pond N2",
+      "info": ""
+    },
+    {
+      "id": "znpp_post_23",
+      "label": "Monitoring post N23 - NPP east part",
+      "info": ""
+    },
+    {
+      "id": "znpp_upp_6",
+      "label": "Point at the unit pumping plant 6",
+      "info": ""
+    },
+    {
+      "id": "znpp_upp5_upp6",
+      "label": "Point between the unit pumping plants 5 and 6",
+      "info": ""
+    },
+    {
+      "id": "znpp_upp4_upp5",
+      "label": "Point between the unit pumping plants 4 and 5",
+      "info": ""
+    },
+    {
+      "id": "znpp_upp3_upp4",
+      "label": "Point between the unit pumping plants 3 and 4",
+      "info": ""
+    },
+    {
+      "id": "znpp_upp2_upp3",
+      "label": "Point between the unit pumping plants 2 and 6",
+      "info": ""
+    },
+    {
+      "id": "znpp_upp1_upp2",
+      "label": "Point between the unit pumping plants 1 and 2",
+      "info": ""
+    },
+    {
+      "id": "znpp_ovk",
+      "label": "Point opposite the OVK",
+      "info": ""
+    },
+    {
+      "id": "znpp_post_24",
+      "label": "Monitoring post N24 – NPP west part",
+      "info": ""
+    }
+  ]
+}

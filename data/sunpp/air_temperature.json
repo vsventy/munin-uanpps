@@ -1,0 +1,15 @@
+{
+  "id": "sunpp_air_temperature",
+  "title": "South-Ukraine NPP Air temperature (in degrees Celsius)",
+  "category": "meteo",
+  "vlabel": "degrees Celsius",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "sunpp_air_temp",
+      "label": "Air temperature",
+      "colour": "Indigo.500"
+    }
+  ]
+}

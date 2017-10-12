@@ -25,4 +25,4 @@ Requirements
 License
 =======
 
-``uanpps-nodes`` is offered under the MIT License.
+``munin-uanpps`` is offered under the MIT License.

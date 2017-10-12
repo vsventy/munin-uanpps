@@ -4,16 +4,11 @@ from __future__ import unicode_literals, print_function
 import httplib
 import json
 import logging
-import os
 import requests
 
 from fake_useragent import FakeUserAgentError
 from fake_useragent import UserAgent
-from logging.config import fileConfig
 
-ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
-fileConfig(os.path.join(ROOT_PATH, 'logging_config.ini'))
 logger = logging.getLogger('uanpps-core')
 
 

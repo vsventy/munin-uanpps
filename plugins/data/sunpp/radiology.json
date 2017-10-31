@@ -1,0 +1,75 @@
+{
+  "id": "sunpp_radiology_industrial_site",
+  "title": "South-Ukraine NPP Radiological situation (in uSv/h)",
+  "category": "radiology",
+  "vlabel": "microsieverts per hour (uSv/h)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "sunpp_yuzh_olimp",
+      "label": "Yuzhnoukrainsk, SC Olimp",
+      "info": ""
+    },
+    {
+      "id": "sunpp_yuzh_edl",
+      "label": "Yuzhnoukrainsk, EDL",
+      "info": ""
+    },
+    {
+      "id": "sunpp_repair_works",
+      "label": "Repair and Engineering Works",
+      "info": ""
+    },
+    {
+      "id": "sunpp_arbuzynka",
+      "label": "Arbuzynka",
+      "info": ""
+    },
+    {
+      "id": "sunpp_blagodatne",
+      "label": "Blagodatne",
+      "info": ""
+    },
+    {
+      "id": "sunpp_novoselivka",
+      "label": "Novoselivka",
+      "info": ""
+    },
+    {
+      "id": "sunpp_agronomiya",
+      "label": "Agronomiya",
+      "info": ""
+    },
+    {
+      "id": "sunpp_voznesensk",
+      "label": "Voznesensk",
+      "info": ""
+    },
+    {
+      "id": "sunpp_oleksandrivka",
+      "label": "Oleksandrivka",
+      "info": ""
+    },
+    {
+      "id": "sunpp_akmechetski_stavky",
+      "label": "Akmechetski stavky",
+      "info": ""
+    },
+    {
+      "id": "sunpp_domanivka",
+      "label": "Domanivka",
+      "info": ""
+    },
+    {
+      "id": "sunpp_kuznetsove",
+      "label": "Kuznetsove",
+      "info": ""
+    },
+    {
+      "id": "sunpp_ivanivka",
+      "label": "Ivanivka",
+      "info": ""
+    }
+  ]
+}

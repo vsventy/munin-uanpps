@@ -1,0 +1,15 @@
+{
+  "id": "sunpp_atm",
+  "title": "South-Ukraine NPP Atmospheric pressure (in mmHg)",
+  "category": "meteo",
+  "vlabel": "millimeter of mercury (mmHg)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "sunpp_atm",
+      "label": "Atmospheric pressure",
+      "colour": "Amber.500"
+    }
+  ]
+}

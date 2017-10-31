@@ -1,0 +1,16 @@
+{
+  "id": "sunpp_wind_speed",
+  "title": "South-Ukraine NPP Wind speed (in m/s)",
+  "category": "meteo",
+  "vlabel": "meters per second (m/s)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "sunpp_wind_speed_avg",
+      "label": "Wind speed (avg)",
+      "thickness": 2,
+      "colour": "Purple.500"
+    }
+  ]
+}

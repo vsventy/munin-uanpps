@@ -1,0 +1,65 @@
+{
+  "id": "khnpp_radiology",
+  "title": "Khmelnitsky NPP Radiological situation (in uSv/h)",
+  "category": "radiology",
+  "vlabel": "microsieverts per hour (uSv/h)",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "khnpp_pluzhne",
+      "label": "Pluzhne",
+      "info": ""
+    },
+    {
+      "id": "khnpp_bilotyn",
+      "label": "Bilotyn",
+      "info": ""
+    },
+    {
+      "id": "khnpp_dertka",
+      "label": "Dertka",
+      "info": ""
+    },
+    {
+      "id": "khnpp_slavuta",
+      "label": "Slavuta",
+      "info": ""
+    },
+    {
+      "id": "khnpp_komarivka",
+      "label": "Komarivka",
+      "info": ""
+    },
+    {
+      "id": "khnpp_rybhosp",
+      "label": "RybHosp",
+      "info": ""
+    },
+    {
+      "id": "khnpp_polyan",
+      "label": "Polyan",
+      "info": ""
+    },
+    {
+      "id": "khnpp_cpk",
+      "label": "CPK",
+      "info": ""
+    },
+    {
+      "id": "khnpp_kryvyn",
+      "label": "Kryvyn",
+      "info": ""
+    },
+    {
+      "id": "khnpp_netishyn",
+      "label": "Netishyn",
+      "info": ""
+    },
+    {
+      "id": "khnpp_ostrog",
+      "label": "Ostrog",
+      "info": ""
+    }
+  ]
+}

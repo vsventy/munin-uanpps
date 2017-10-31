@@ -1,0 +1,15 @@
+{
+  "id": "sunpp_relative_humidity",
+  "title": "South-Ukraine NPP Relative humidity (in %)",
+  "category": "meteo",
+  "vlabel": "%",
+  "total": "",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "sunpp_rel_humidity",
+      "label": "Relative humidity",
+      "colour": "Indigo.500"
+    }
+  ]
+}

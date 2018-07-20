@@ -11,7 +11,6 @@ import urllib2
 from bs4 import BeautifulSoup
 
 from core.utils import enable_requests_logging
-from core.utils import get_lists_of_values
 from core.utils import get_random_user_agent
 from core.utils import get_values_multigraph
 from core.utils import init_base_parameters
@@ -86,6 +85,15 @@ def display_config():
     print('')
 
 
+def get_lists_of_values(rows):
+    values_list = []
+    for row in rows:
+        cols = row.find_all('div', class_='m_cell')
+        cols = [elem.text.strip() for elem in cols]
+        values_list.append([elem for elem in cols if elem])
+    return values_list
+
+
 def khnpp_node(config):
     logger.info('Start khnpp-node (main)')
 
@@ -95,23 +103,22 @@ def khnpp_node(config):
 
     # retrieve meteo parameters
     meteo_container = soup.find(id='lightmeteo')
-    meteo_table_rows = meteo_container.find('table').find_all('tr')
-    meteo_data = get_lists_of_values(meteo_table_rows)
+    meteo_rows = meteo_container.find_all('div', class_='m_row')
+    meteo_data = get_lists_of_values(meteo_rows)
 
-    air_temperature = meteo_data[1][1].split(' ', 1)[0]
-    wind_speed = meteo_data[2][1].split(' ', 1)[0]
-    humidity = meteo_data[3][1].split(' ', 1)[0]
-    atmospheric_pressure = meteo_data[4][1].split(' ', 1)[0]
+    air_temperature = meteo_data[0][1].split(' ', 1)[0]
+    wind_speed = meteo_data[1][1].split(' ', 1)[0]
+    humidity = meteo_data[2][1].split(' ', 1)[0]
+    atmospheric_pressure = meteo_data[3][1].split(' ', 1)[0]
 
     # retrieve performance parameters
-    perform_container = soup.find_all('div', class_='latest-projects-list')[0]\
-        .find_all('ul')[0].find_all('li')[0].find('div')
-    perform_table_rows = perform_container.find('table').find_all('tr')
-    perform_data = get_lists_of_values(perform_table_rows)
+    perform_container = soup.find_all('div', class_='m_table')[0]
+    perform_rows = perform_container.find_all('div', class_='m_row')
+    perform_data = get_lists_of_values(perform_rows)
 
     units_list = []
-    unit_1 = perform_data[1][1].split(' ', 1)[0]
-    unit_2 = perform_data[2][1].split(' ', 1)[0]
+    unit_1 = perform_data[0][1].split(' ', 1)[0]
+    unit_2 = perform_data[1][1].split(' ', 1)[0]
     units_list.extend((unit_1, unit_2))
 
     # retrieve radiological situation

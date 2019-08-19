@@ -5,6 +5,7 @@ from __future__ import unicode_literals, print_function
 import ast
 import logging
 import os
+import pdb
 import sys
 import urllib2
 
@@ -88,40 +89,33 @@ def znpp_node(config):
     logger.info('Start znpp-node (main)')
 
     # retrieve meteo parameters
-    request = urllib2.Request(config['meteo_url'], headers=config['headers'])
+    request = urllib2.Request(config['perform_url'], headers=config['headers'])
     response = urllib2.urlopen(request).read()
     meteo_soup = BeautifulSoup(response, 'html.parser')
 
-    meteo_container = meteo_soup.find('div', class_='span9')\
-        .find('div', class_='span7 offset1')
+    meteo_container = meteo_soup.find('div', {'id': 'block-znppmawssidebar'})
     meteo_table_rows = meteo_container.find('table').find_all('tr')
     meteo_data = get_lists_of_values(meteo_table_rows)
 
-    air_temperature = meteo_data[0][1].split(' ', 1)[0]
+    air_temperature = meteo_data[0][1]
     humidity = meteo_data[3][1].split(' ', 1)[0]
-    atmospheric_pressure = meteo_data[4][1].split(' ', 1)[0]
+    atmospheric_pressure = meteo_data[4][1]
 
-    wind_speed_list = []
-    wind_speed_avg = meteo_data[5][1].split(' ', 1)[0]
-    wind_speed_max = meteo_data[5][1].split(' ')[4]
-    wind_speed_list.extend((wind_speed_avg, wind_speed_max))
+    wind_speed_avg = meteo_data[2][1]
 
     # retrieve performance parameters
-    request = urllib2.Request(config['perform_url'], headers=config['headers'])
+    request = urllib2.Request(config['meteo_url'], headers=config['headers'])
     response = urllib2.urlopen(request).read()
     perform_soup = BeautifulSoup(response, 'html.parser')
 
-    perform_container = perform_soup.find(
-        name='h1',
-        string='Навантаження по блоках').parent
+    perform_container = perform_soup.find('div', {'id': 'block-znppunitssidebar'})
     perform_table_rows = perform_container.find('table').find_all('tr')
     perform_data = get_lists_of_values(perform_table_rows)
 
     units_list = []
     iter_perform = iter(perform_data)
-    iter_perform.next()  # skip header row
     for item in iter_perform:
-        value = item[2] if len(item) > 2 else 0
+        value = item[1] if len(item) > 2 else 0
         units_list.append(value)
 
     # retrieve radiological situation
@@ -129,25 +123,16 @@ def znpp_node(config):
     response = urllib2.urlopen(request).read()
     radiology_soup = BeautifulSoup(response, 'html.parser')
 
-    radiology_container = radiology_soup.find(
-        name='h1',
-        string='30-км зона навколо ЗАЕС').parent
-    radiology_items = radiology_container.find_all('a', class_='ascro-tt')
+    radiology_container = radiology_soup.find('div', {'id': 'block-porto-content'})
+    radiology_table_rows = radiology_container.find('table').find_all('tr')
+    radiology_data = get_lists_of_values(radiology_table_rows)
 
     radiology_values_30km = []
-    for item in radiology_items:
-        item_text = item.text.strip()
-        radiology_values_30km.append(item_text)
-
-    radiology_container = radiology_soup.find(
-        name='h1',
-        string='Проммайданчик ЗАЕС').parent
-    radiology_items = radiology_container.find_all('a', class_='ascro-tt')
-
-    radiology_values = []
-    for item in radiology_items:
-        item_text = item.text.strip()
-        radiology_values.append(item_text)
+    iter_radiology = iter(radiology_data)
+    iter_radiology.next()  # skip header row
+    for item in iter_radiology:
+        item_value = item[1].strip()
+        radiology_values_30km.append(item_value)
 
     # Air temperature
     get_values_multigraph(air_temperature, AIR_TEMPERATURE)
@@ -159,16 +144,13 @@ def znpp_node(config):
     get_values_multigraph(humidity, HUMIDITY)
 
     # Wind speed
-    get_values_multigraph(wind_speed_list, WIND_SPEED)
+    get_values_multigraph(wind_speed_avg, WIND_SPEED)
 
     # Loads Units
     get_values_multigraph(units_list, LOADS_UNITS)
 
     # Radiological situation (30-km)
-    get_values_multigraph(radiology_values_30km, RADIOLOGY_30KM, 0.01)
-
-    # Radiological situation (industrial site)
-    get_values_multigraph(radiology_values, RADIOLOGY, 0.01)
+    get_values_multigraph(radiology_values_30km, RADIOLOGY_30KM)
 
     logger.info('Finish znpp-node (main)')
     sys.exit(0)
@@ -186,9 +168,9 @@ def main():
     # init config
     config = {
         'logging': os.environ.get('uanpps_logging', 'False'),
-        'perform_url': os.environ.get('perform_url', 'http://www.npp.zp.ua/Home/Production'),
-        'meteo_url': os.environ.get('meteo_url', 'http://www.npp.zp.ua/Weather'),
-        'radio_url': os.environ.get('radio_url', 'http://www.npp.zp.ua/Home/Ascro'),
+        'perform_url': os.environ.get('perform_url', 'https://www.npp.zp.ua/uk/activities/performance-indicators'),
+        'meteo_url': os.environ.get('meteo_url', 'https://www.npp.zp.ua/uk/safety/meteo'),
+        'radio_url': os.environ.get('radio_url', 'https://www.npp.zp.ua/uk/safety/arms'),
         'headers': {'User-Agent': user_agent}
     }
 

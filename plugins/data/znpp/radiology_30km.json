@@ -7,6 +7,11 @@
   "scale": "no",
   "fields": [
     {
+      "id": "znpp_industrial_ground",
+      "label": "Industrial ground",
+      "info": ""
+    },
+    {
       "id": "znpp_michurino",
       "label": "Michurino",
       "info": ""

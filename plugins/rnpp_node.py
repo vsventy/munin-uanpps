@@ -168,7 +168,7 @@ def rnpp_node(config):
         logger.error('When decode data: url=%s, params=%s',
                      url, config['params3'])
 
-    # Production of electricity for current day/month
+    # Production of electricity for current month
     get_values_multigraph(data, PRODUCTION_ELECTRICITY, 0.001)
 
     logger.info('Finish rnpp-node (main)')
@@ -190,7 +190,7 @@ def main():
         'logging': os.environ.get('uanpps_logging', 'False'),
         'params1': {'value': 'sprutbase'},
         'params2': {'value': 'rnpp_n'},
-        'params3': {'value': 'rnpp_current_state'},
+        'params3': {'value': 'rnpp_current_state_sm'},
         'headers': {'User-Agent': user_agent}
     }
 

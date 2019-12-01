@@ -11,12 +11,6 @@
       "label": "For current month",
       "parameter": "P_CurrentMonth.W_RnPP",
       "colour": "Indigo.500"
-    },
-    {
-      "id": "prod_for_day",
-      "label": "For current day",
-      "parameter": "P_CurrentDay.W_RnPP",
-      "colour": "Pink.A200"
     }
   ]
 }

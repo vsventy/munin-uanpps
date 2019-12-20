@@ -21,9 +21,6 @@ logger = logging.getLogger('rnpp-node')
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 ABSOLUTE_PATH = ROOT_PATH + '/data/rnpp/'
 
-LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
-LOADS_UNITS_BY_TGEN = load_json(ABSOLUTE_PATH + 'loads_units_by_tgen.json')
-LOADS_LINES = load_json(ABSOLUTE_PATH + 'loads_lines.json')
 AIR_TEMPERATURE = load_json(ABSOLUTE_PATH + 'air_temperature.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
 ATM = load_json(ABSOLUTE_PATH + 'atm.json')
@@ -35,32 +32,6 @@ COLORS = load_json(ROOT_PATH + '/data/colors.json')
 
 
 def display_config():
-    # Loads Units
-    init_multigraph(LOADS_UNITS)
-    print('graph_args --base 1000 --lower-limit 0')
-    init_base_parameters(LOADS_UNITS, COLORS)
-    for field in LOADS_UNITS['fields']:
-        print('{}.min 0'.format(field['id']))
-    print('')
-
-    # Loads Units by turbogenerators
-    init_multigraph(LOADS_UNITS_BY_TGEN)
-    print('graph_args --base 1000 --lower-limit 0')
-    init_base_parameters(LOADS_UNITS_BY_TGEN, COLORS)
-    for field in LOADS_UNITS_BY_TGEN['fields']:
-        print('{}.min 0'.format(field['id']))
-        print('{}.draw AREASTACK'.format(field['id']))
-    print('')
-
-    # Load on the lines
-    init_multigraph(LOADS_LINES)
-    print('graph_args --base 1000 --lower-limit 0')
-    init_base_parameters(LOADS_LINES, COLORS)
-    for field in LOADS_LINES['fields']:
-        print('{}.min 0'.format(field['id']))
-        print('{}.draw AREASTACK'.format(field['id']))
-    print('')
-
     # Air temperature
     init_multigraph(AIR_TEMPERATURE)
     print(('graph_args --base 1000 --upper-limit 20 --lower-limit -20 '
@@ -123,9 +94,6 @@ def rnpp_node(config):
     response.encoding = 'utf-8'
     data = json.loads(response.text)
 
-    # Loads Units
-    get_values_multigraph(data, LOADS_UNITS)
-
     # Air temperature
     get_values_multigraph(data, AIR_TEMPERATURE)
 
@@ -143,21 +111,6 @@ def rnpp_node(config):
 
     # Radiological situation
     get_values_multigraph(data, RADIOLOGY)
-
-    response = requests.get(url=url, params=config['params2'],
-                            headers=config['headers'])
-    response.encoding = 'utf-8'
-    try:
-        data = json.loads(response.text)['N']
-    except ValueError:
-        logger.error('When decode data: url=%s, params=%s',
-                     url, config['params2'])
-
-    # Load on the lines
-    get_values_multigraph(data, LOADS_LINES)
-
-    # Loads Units by turbogenerators
-    get_values_multigraph(data, LOADS_UNITS_BY_TGEN)
 
     response = requests.get(url=url, params=config['params3'],
                             headers=config['headers'])

@@ -70,7 +70,11 @@ def get_values_multigraph(data, config, ratio=None):
                 value = data[parameter[0]][parameter[1]]
             else:
                 parameter = field['parameter']
-                value = data[parameter]
+                try:
+                    value = data[parameter]
+                except KeyError:
+                    logger.exception('Parameter \'%s\' is missing', parameter)
+                    break
         else:
             try:
                 value = data[i] if isinstance(data, list) else data

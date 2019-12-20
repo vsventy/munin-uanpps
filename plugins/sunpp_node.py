@@ -26,7 +26,6 @@ ABSOLUTE_PATH = ROOT_PATH + '/data/sunpp/'
 AIR_TEMPERATURE = load_json(ABSOLUTE_PATH + 'air_temperature.json')
 ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
-LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 COLORS = load_json(ROOT_PATH + '/data/colors.json')
@@ -88,16 +87,10 @@ def sunpp_node(config):
     table_rows = soup.find('table', class_='"table-param-block"').find_all('tr')
     data = get_lists_of_values(table_rows)
 
-    units_list = []
-    unit_1 = data[0][1]
-    unit_2 = data[1][1]
-    unit_3 = data[2][1]
-    units_list.extend((unit_1, unit_2, unit_3))
-
-    air_temperature = data[4][1]
-    wind_speed = data[6][1]
-    atmospheric_pressure = data[7][1]
-    humidity = data[8][1]
+    air_temperature = data[1][1]
+    wind_speed = data[3][1]
+    atmospheric_pressure = data[4][1]
+    humidity = data[5][1]
 
     # retrieve radiological situation
     request = urllib2.Request(config['radio_url'], headers=config['headers'])
@@ -126,9 +119,6 @@ def sunpp_node(config):
 
     # Wind speed
     get_values_multigraph(wind_speed, WIND_SPEED)
-
-    # Loads Units
-    get_values_multigraph(units_list, LOADS_UNITS)
 
     # Radiological situation
     get_values_multigraph(radio_values, RADIOLOGY)

@@ -61,14 +61,6 @@ def display_config():
         print('{}.draw LINE{}'.format(field['id'], field['thickness']))
     print('')
 
-    # Loads Units
-    init_multigraph(LOADS_UNITS)
-    print('graph_args --base 1000 --lower-limit 0')
-    init_base_parameters(LOADS_UNITS, COLORS)
-    for field in LOADS_UNITS['fields']:
-        print('{}.min 0'.format(field['id']))
-    print('')
-
     # Radiological situation
     init_multigraph(RADIOLOGY)
     print('graph_args --base 1000 --lower-limit 0 --alt-y-grid')

@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-
+#!/usr/bin/env python3
 import ast
 import logging
 import os
 import pdb
 import sys
-import urllib2
+import urllib.request
 
 from bs4 import BeautifulSoup
 
@@ -18,6 +15,7 @@ from core.utils import get_values_multigraph
 from core.utils import init_base_parameters
 from core.utils import init_multigraph
 from core.utils import load_json
+from core.utils import COLORS
 
 logger = logging.getLogger('znpp-node')
 
@@ -31,7 +29,6 @@ LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
 RADIOLOGY_30KM = load_json(ABSOLUTE_PATH + 'radiology_30km.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
-COLORS = load_json(ROOT_PATH + '/data/colors.json')
 
 
 def display_config():
@@ -53,7 +50,7 @@ def display_config():
     print('graph_args --base 1000')
     init_base_parameters(ATM, COLORS)
     for field in ATM['fields']:
-        print('{}.draw AREA'.format(field['id']))
+        print(f"{field['id']}.draw AREA")
     print('')
 
     # Wind speed
@@ -61,7 +58,7 @@ def display_config():
     print('graph_args --base 1000 --upper-limit 20 --lower-limit 0')
     init_base_parameters(WIND_SPEED, COLORS)
     for field in WIND_SPEED['fields']:
-        print('{}.draw LINE{}'.format(field['id'], field['thickness']))
+        print(f"{field['id']}.draw LINE{field['thickness']}")
     print('')
 
     # Loads Units
@@ -69,7 +66,7 @@ def display_config():
     print('graph_args --base 1000 --lower-limit 0')
     init_base_parameters(LOADS_UNITS, COLORS)
     for field in LOADS_UNITS['fields']:
-        print('{}.min 0'.format(field['id']))
+        print(f"{field['id']}.min 0")
     print('')
 
     # Radiological situation (30-km)
@@ -89,8 +86,8 @@ def znpp_node(config):
     logger.info('Start znpp-node (main)')
 
     # retrieve meteo parameters
-    request = urllib2.Request(config['perform_url'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
+    request = urllib.request.Request(config['perform_url'], headers=config['headers'])
+    response = urllib.request.urlopen(request).read()
     meteo_soup = BeautifulSoup(response, 'html.parser')
 
     meteo_container = meteo_soup.find('div', {'id': 'block-znppmawssidebar'})
@@ -104,8 +101,8 @@ def znpp_node(config):
     wind_speed_avg = meteo_data[2][1]
 
     # retrieve performance parameters
-    request = urllib2.Request(config['meteo_url'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
+    request = urllib.request.Request(config['meteo_url'], headers=config['headers'])
+    response = urllib.request.urlopen(request).read()
     perform_soup = BeautifulSoup(response, 'html.parser')
 
     perform_container = perform_soup.find('div', {'id': 'block-znppunitssidebar'})
@@ -119,8 +116,8 @@ def znpp_node(config):
         units_list.append(value)
 
     # retrieve radiological situation
-    request = urllib2.Request(config['radio_url'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
+    request = urllib.request.Request(config['radio_url'], headers=config['headers'])
+    response = urllib.request.urlopen(request).read()
     radiology_soup = BeautifulSoup(response, 'html.parser')
 
     radiology_container = radiology_soup.find('div', {'id': 'block-porto-content'})
@@ -129,7 +126,7 @@ def znpp_node(config):
 
     radiology_values_30km = []
     iter_radiology = iter(radiology_data)
-    iter_radiology.next()  # skip header row
+    next(iter_radiology)  # skip header row
     for item in iter_radiology:
         item_value = item[1].strip()
         radiology_values_30km.append(item_value)
@@ -179,6 +176,7 @@ def main():
         enable_requests_logging()
 
     znpp_node(config)
+
 
 if __name__ == '__main__':
     main()

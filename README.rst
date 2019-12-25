@@ -13,7 +13,7 @@ External links
 Requirements
 ============
 
-- Python 2.7.x
+- Python 3
 - beautifulsoup4_
 - fake-useragent_
 - requests_

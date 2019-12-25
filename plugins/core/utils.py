@@ -1,15 +1,15 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-
-import httplib
+import http.client
 import json
 import logging
+import os
 import requests
 
 from fake_useragent import FakeUserAgentError
 from fake_useragent import UserAgent
 
 logger = logging.getLogger('uanpps-core')
+
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def load_json(full_path):
@@ -18,13 +18,13 @@ def load_json(full_path):
 
 
 def init_multigraph(config):
-    print('multigraph {}'.format(config['id']))
-    print('graph_title {}'.format(config['title']))
-    print('graph_category {}'.format(config['category']))
-    print('graph_vlabel {}'.format(config['vlabel']))
+    print(f"multigraph {config['id']}")
+    print(f"graph_title {config['title']}")
+    print(f"graph_category {config['category']}")
+    print(f"graph_vlabel {config['vlabel']}")
     if config['total']:
-        print('graph_total {}'.format(config['total']))
-    print('graph_scale {}'.format(config['scale']))
+        print(f"graph_total {config['total']}")
+    print(f"graph_scale {config['scale']}")
 
 
 def get_lists_of_values(html_table_rows):
@@ -48,23 +48,23 @@ def get_color_value(colors, name):
 def init_base_parameters(config, colors):
     for field in config['fields']:
         try:
-            print('{}.label {}'.format(field['id'], field['label']))
+            id = field['id']
+            print(f"{id}.label {field['label']}")
         except UnicodeEncodeError:
-            logger.exception('Encoding error for field %s', field['id'])
+            logger.exception('Encoding error for field %s', id)
             continue
         if 'colour' in field:
-            print('{}.colour {}'.format(
-                field['id'],
-                get_color_value(colors, field['colour']))
-            )
+            color_value = get_color_value(colors, field['colour'])
+            print(f"{id}.colour {color_value}")
         if 'info' in field:
-            print('{}.info {}'.format(field['id'], field['info']))
+            print(f"{id}.info {field['info']}")
 
 
 def get_values_multigraph(data, config, ratio=None):
-    print('multigraph {}'.format(config['id']))
+    print(f"multigraph {config['id']}")
     for i, field in enumerate(config['fields']):
-        if 'parameter' in field.keys():
+        id = field['id']
+        if 'parameter' in list(field.keys()):
             if '.' in field['parameter']:
                 parameter = field['parameter'].split('.')
                 value = data[parameter[0]][parameter[1]]
@@ -80,23 +80,22 @@ def get_values_multigraph(data, config, ratio=None):
                 value = data[i] if isinstance(data, list) else data
             except IndexError:
                 logger.exception('Mismatch data for field \'%s\': %s',
-                                 field['id'], data)
+                                 id, data)
                 break
         try:
-            if isinstance(value, (str, unicode)):
+            if isinstance(value, str):
                 value = value.replace(',', '.')
             value = float(value)
         except (TypeError, ValueError):
-            logger.exception('Invalid value for field \'%s\': %s',
-                             field['id'], value)
+            logger.exception('Invalid value for field \'%s\': %s', id, value)
             continue
         if ratio:
             value = float(value) * ratio
-        print('{}.value {:.2f}'.format(field['id'], value))
+        print(f"{id}.value {value:.2f}")
 
 
 def enable_requests_logging():
-    httplib.HTTPConnection.debuglevel = 1
+    http.client.HTTPConnection.debuglevel = 1
     requests_log = logging.getLogger('requests.packages.urllib3')
     requests_log.setLevel(logging.DEBUG)
     requests.propagate = True
@@ -111,3 +110,6 @@ def get_random_user_agent():
                       'Gecko/20100101 Firefox/41.0')
     logger.debug('UserAgent = "%s"', user_agent)
     return user_agent
+
+
+COLORS = load_json(ROOT_PATH + '/..' + '/data/colors.json')

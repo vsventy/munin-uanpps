@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-
+#!/usr/bin/env python3
 import ast
 import json
 import logging
@@ -15,6 +12,7 @@ from core.utils import get_values_multigraph
 from core.utils import init_base_parameters
 from core.utils import init_multigraph
 from core.utils import load_json
+from core.utils import COLORS
 
 logger = logging.getLogger('rnpp-node')
 
@@ -28,7 +26,6 @@ RAINFALL_INTENSITY = load_json(ABSOLUTE_PATH + 'rainfall_intensity.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 PRODUCTION_ELECTRICITY = load_json(ABSOLUTE_PATH + 'production_electricity.json')
-COLORS = load_json(ROOT_PATH + '/data/colors.json')
 
 
 def display_config():
@@ -50,7 +47,7 @@ def display_config():
     print('graph_args --base 1000')
     init_base_parameters(ATM, COLORS)
     for field in ATM['fields']:
-        print('{}.draw AREA'.format(field['id']))
+        print(f"{field['id']}.draw AREA")
     print('')
 
     # Intensity of rainfall
@@ -58,7 +55,7 @@ def display_config():
     print('graph_args --base 1000 --upper-limit 5 --lower-limit 0')
     init_base_parameters(RAINFALL_INTENSITY, COLORS)
     for field in RAINFALL_INTENSITY['fields']:
-        print('{}.draw AREA'.format(field['id']))
+        print(f"{field['id']}.draw AREA")
     print('')
 
     # Wind speed
@@ -66,7 +63,7 @@ def display_config():
     print('graph_args --base 1000 --upper-limit 20 --lower-limit 0')
     init_base_parameters(WIND_SPEED, COLORS)
     for field in WIND_SPEED['fields']:
-        print('{}.draw LINE{}'.format(field['id'], field['thickness']))
+        print(f"{field['id']}.draw LINE{field['thickness']}")
     print('')
 
     # Radiological situation
@@ -80,7 +77,7 @@ def display_config():
     print('graph_args --base 1000 --lower-limit 0')
     init_base_parameters(PRODUCTION_ELECTRICITY, COLORS)
     for field in PRODUCTION_ELECTRICITY['fields']:
-        print('{}.draw AREA'.format(field['id']))
+        print(f"{field['id']}.draw AREA")
     print('')
 
 
@@ -152,6 +149,7 @@ def main():
         enable_requests_logging()
 
     rnpp_node(config)
+
 
 if __name__ == '__main__':
     main()

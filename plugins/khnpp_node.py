@@ -1,12 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-
+#!/usr/bin/env python3
 import ast
 import logging
 import os
 import sys
-import urllib2
+import urllib.request
 
 from bs4 import BeautifulSoup
 
@@ -16,6 +13,7 @@ from core.utils import get_values_multigraph
 from core.utils import init_base_parameters
 from core.utils import init_multigraph
 from core.utils import load_json
+from core.utils import COLORS
 
 logger = logging.getLogger('khnpp-node')
 
@@ -29,7 +27,6 @@ LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 RAINFALL_INTENSITY = load_json(ABSOLUTE_PATH + 'rainfall_intensity.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
-COLORS = load_json(ROOT_PATH + '/data/colors.json')
 
 
 def display_config():
@@ -51,7 +48,7 @@ def display_config():
     print('graph_args --base 1000')
     init_base_parameters(ATM, COLORS)
     for field in ATM['fields']:
-        print('{}.draw AREA'.format(field['id']))
+        print(f"{field['id']}.draw AREA")
     print('')
 
     # Intensity of rainfall
@@ -59,7 +56,7 @@ def display_config():
     print('graph_args --base 1000 --upper-limit 5 --lower-limit 0')
     init_base_parameters(RAINFALL_INTENSITY, COLORS)
     for field in RAINFALL_INTENSITY['fields']:
-        print('{}.draw AREA'.format(field['id']))
+        print(f"{field['id']}.draw AREA")
     print('')
 
     # Wind speed
@@ -67,7 +64,7 @@ def display_config():
     print('graph_args --base 1000 --upper-limit 20 --lower-limit 0')
     init_base_parameters(WIND_SPEED, COLORS)
     for field in WIND_SPEED['fields']:
-        print('{}.draw LINE{}'.format(field['id'], field['thickness']))
+        print(f"{field['id']}.draw LINE{field['thickness']}")
     print('')
 
     # Loads Units
@@ -75,7 +72,7 @@ def display_config():
     print('graph_args --base 1000 --lower-limit 0')
     init_base_parameters(LOADS_UNITS, COLORS)
     for field in LOADS_UNITS['fields']:
-        print('{}.min 0'.format(field['id']))
+        print(f"{field['id']}.min 0")
     print('')
 
     # Radiological situation
@@ -97,8 +94,8 @@ def get_lists_of_values(rows):
 def khnpp_node(config):
     logger.info('Start khnpp-node (main)')
 
-    request = urllib2.Request(config['host'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
+    request = urllib.request.Request(config['host'], headers=config['headers'])
+    response = urllib.request.urlopen(request).read()
     soup = BeautifulSoup(response, 'html.parser')
 
     # retrieve meteo parameters
@@ -122,8 +119,8 @@ def khnpp_node(config):
     units_list.extend((unit_1, unit_2))
 
     # retrieve radiological situation
-    request = urllib2.Request(config['radio_url'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
+    request = urllib.request.Request(config['radio_url'], headers=config['headers'])
+    response = urllib.request.urlopen(request).read()
     radiology_soup = BeautifulSoup(response, 'html.parser')
 
     radiology_container = radiology_soup.find('div', class_='dataASKRO')
@@ -135,8 +132,8 @@ def khnpp_node(config):
         radiology_values.append(item_text.split(' ', 1)[0])
 
     # retrieve detail meteo parameters
-    request = urllib2.Request(config['meteo_url'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
+    request = urllib.request.Request(config['meteo_url'], headers=config['headers'])
+    response = urllib.request.urlopen(request).read()
     meteo_soup = BeautifulSoup(response, 'html.parser')
 
     meteo_detail_items = meteo_soup.find('div', class_='meteoData')\
@@ -197,6 +194,7 @@ def main():
         enable_requests_logging()
 
     khnpp_node(config)
+
 
 if __name__ == '__main__':
     main()

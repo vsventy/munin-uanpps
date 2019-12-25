@@ -1,12 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-
+#!/usr/bin/env python3
 import ast
 import logging
 import os
 import sys
-import urllib2
+import urllib.request
 
 from bs4 import BeautifulSoup
 
@@ -17,6 +14,7 @@ from core.utils import get_values_multigraph
 from core.utils import init_base_parameters
 from core.utils import init_multigraph
 from core.utils import load_json
+from core.utils import COLORS
 
 logger = logging.getLogger('sunpp-node')
 
@@ -28,7 +26,6 @@ ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
-COLORS = load_json(ROOT_PATH + '/data/colors.json')
 
 
 def display_config():
@@ -72,8 +69,8 @@ def sunpp_node(config):
     logger.info('Start sunpp-node (main)')
 
     # retrieve meteo parameters
-    request = urllib2.Request(config['home_url'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
+    request = urllib.request.Request(config['home_url'], headers=config['headers'])
+    response = urllib.request.urlopen(request).read()
     soup = BeautifulSoup(response, 'html.parser')
 
     table_rows = soup.find('table', class_='"table-param-block"').find_all('tr')
@@ -85,8 +82,8 @@ def sunpp_node(config):
     humidity = data[5][1]
 
     # retrieve radiological situation
-    request = urllib2.Request(config['radio_url'], headers=config['headers'])
-    response = urllib2.urlopen(request).read()
+    request = urllib.request.Request(config['radio_url'], headers=config['headers'])
+    response = urllib.request.urlopen(request).read()
     radio_soup = BeautifulSoup(response, 'html.parser')
 
     radio_table_rows = radio_soup.find('table', class_='"table-param-askro"')\
@@ -94,7 +91,7 @@ def sunpp_node(config):
     radio_data = get_lists_of_values(radio_table_rows)
 
     iter_radio = iter(radio_data)
-    iter_radio.next()  # skip header row
+    next(iter_radio)  # skip header row
     radio_values = []
     for item in iter_radio:
         value = item[2].strip()
@@ -141,6 +138,7 @@ def main():
         enable_requests_logging()
 
     sunpp_node(config)
+
 
 if __name__ == '__main__':
     main()

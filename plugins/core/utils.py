@@ -13,7 +13,7 @@ ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def load_json(full_path):
-    with open(full_path) as json_file:
+    with open(full_path, mode='r', encoding='utf-8') as json_file:
         return json.load(json_file)
 
 

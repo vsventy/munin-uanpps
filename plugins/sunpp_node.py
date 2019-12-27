@@ -24,6 +24,7 @@ ABSOLUTE_PATH = ROOT_PATH + '/data/sunpp/'
 AIR_TEMPERATURE = load_json(ABSOLUTE_PATH + 'air_temperature.json')
 ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 HUMIDITY = load_json(ABSOLUTE_PATH + 'humidity.json')
+LOADS_UNITS = load_json(ABSOLUTE_PATH + 'loads_units.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 
@@ -58,6 +59,14 @@ def display_config():
         print('{}.draw LINE{}'.format(field['id'], field['thickness']))
     print('')
 
+    # Loads Units
+    init_multigraph(LOADS_UNITS)
+    print('graph_args --base 1000 --lower-limit 0')
+    init_base_parameters(LOADS_UNITS, COLORS)
+    for field in LOADS_UNITS['fields']:
+        print('{}.min 0'.format(field['id']))
+    print('')
+
     # Radiological situation
     init_multigraph(RADIOLOGY)
     print('graph_args --base 1000 --lower-limit 0 --alt-y-grid')
@@ -82,7 +91,10 @@ def sunpp_node(config):
     humidity = data[5][1]
 
     # retrieve radiological situation
-    request = urllib.request.Request(config['radio_url'], headers=config['headers'])
+    request = urllib.request.Request(
+        config['radio_url'],
+        headers=config['headers']
+    )
     response = urllib.request.urlopen(request).read()
     radio_soup = BeautifulSoup(response, 'html.parser')
 
@@ -97,6 +109,20 @@ def sunpp_node(config):
         value = item[2].strip()
         radio_values.append(value)
 
+    # retrieve units information
+    request = urllib.request.Request(
+        config['units_url'],
+        headers=config['headers']
+    )
+    response = urllib.request.urlopen(request).read()
+    units_soup = BeautifulSoup(response, 'html.parser')
+
+    units_tables = units_soup.find_all('table', class_='table-param-askro')
+    units_list = []
+    for unit_table in units_tables:
+        data = get_lists_of_values(unit_table.find_all('tr'))
+        units_list.append(data[2][1])
+
     # Air temperature
     get_values_multigraph(air_temperature, AIR_TEMPERATURE)
 
@@ -108,6 +134,9 @@ def sunpp_node(config):
 
     # Wind speed
     get_values_multigraph(wind_speed, WIND_SPEED)
+
+    # Loads Units
+    get_values_multigraph(units_list, LOADS_UNITS)
 
     # Radiological situation
     get_values_multigraph(radio_values, RADIOLOGY)
@@ -130,6 +159,7 @@ def main():
         'logging': os.environ.get('uanpps_logging', 'False'),
         'home_url': os.environ.get('home_url', 'https://www.sunpp.mk.ua/'),
         'radio_url': os.environ.get('radio_url', 'https://www.sunpp.mk.ua/uk/activities/radiation'),
+        'units_url': os.environ.get('units_url', 'https://www.sunpp.mk.ua/uk/activities/units'),
         'headers': {'User-Agent': user_agent}
     }
 

@@ -31,8 +31,8 @@ PRODUCTION_ELECTRICITY = load_json(ABSOLUTE_PATH + 'production_electricity.json'
 def display_config():
     # Air temperature
     init_multigraph(AIR_TEMPERATURE)
-    print(('graph_args --base 1000 --upper-limit 20 --lower-limit -20 '
-           'HRULE:0#a1a1a1'))
+    print('graph_args --base 1000 --upper-limit 20 --lower-limit -20 '
+          'HRULE:0#a1a1a1')
     init_base_parameters(AIR_TEMPERATURE, COLORS)
     print('')
 
@@ -84,7 +84,7 @@ def display_config():
 def rnpp_node(config):
     logger.info('Start rnpp-node (main)')
 
-    url = 'http://{}/informer/sprut.php'.format(config['host'])
+    url = 'https://{}/informer/sprut.php'.format(config['host'])
 
     response = requests.get(url=url, params=config['params1'],
                             headers=config['headers'])

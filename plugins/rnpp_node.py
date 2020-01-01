@@ -86,8 +86,18 @@ def rnpp_node(config):
 
     url = 'https://{}/informer/sprut.php'.format(config['host'])
 
-    response = requests.get(url=url, params=config['params1'],
-                            headers=config['headers'])
+    proxies = {}
+    if config['proxies']:
+        proxies['http'] = config['proxies']
+        proxies['https'] = config['proxies']
+
+    response = requests.get(
+        url=url,
+        params=config['params1'],
+        headers=config['headers'],
+        timeout=config['timeout'],
+        proxies=proxies
+    )
     response.encoding = 'utf-8'
     data = json.loads(response.text)
 
@@ -109,8 +119,13 @@ def rnpp_node(config):
     # Radiological situation
     get_values_multigraph(data, RADIOLOGY)
 
-    response = requests.get(url=url, params=config['params3'],
-                            headers=config['headers'])
+    response = requests.get(
+        url=url,
+        params=config['params3'],
+        headers=config['headers'],
+        timeout=config['timeout'],
+        proxies=proxies
+    )
     response.encoding = 'utf-8'
     try:
         data = json.loads(response.text)
@@ -138,6 +153,8 @@ def main():
     config = {
         'host': os.environ.get('host', 'www.rnpp.rv.ua'),
         'logging': os.environ.get('uanpps_logging', 'False'),
+        'proxies': os.environ.get('proxies', ''),
+        'timeout': os.environ.get('timeout', 10),
         'params1': {'value': 'sprutbase'},
         'params2': {'value': 'rnpp_n'},
         'params3': {'value': 'rnpp_current_state_sm'},

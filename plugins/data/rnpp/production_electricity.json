@@ -1,16 +1,34 @@
 {
   "id": "production_electricity",
-  "title": "Rivne NPP Production of electricity (in mln kWh)",
+  "title": "Rivne NPP Production of electricity for current month (in mln kWh)",
   "category": "performance",
   "vlabel": "million kilowatt-hours (mln kWh)",
-  "total": "",
+  "total": "Total plant",
   "scale": "no",
   "fields": [
     {
-      "id": "prod_for_month",
-      "label": "For current month",
-      "parameter": "P_CurrentMonth.W_RnPP",
+      "id": "prod_for_month_b1",
+      "label": "Unit 1",
+      "parameter": "P_CurrentMonth.W_B1",
+      "colour": "Brown.500"
+    },
+    {
+      "id": "prod_for_month_b2",
+      "label": "Unit 2",
+      "parameter": "P_CurrentMonth.W_B2",
+      "colour": "Orange.500"
+    },
+    {
+      "id": "prod_for_month_b3",
+      "label": "Unit 3",
+      "parameter": "P_CurrentMonth.W_B3",
       "colour": "Indigo.500"
+    },
+    {
+      "id": "prod_for_month_b4",
+      "label": "Unit 2",
+      "parameter": "P_CurrentMonth.W_B4",
+      "colour": "Purple.500"
     }
   ]
 }

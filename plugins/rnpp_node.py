@@ -25,7 +25,12 @@ ATM = load_json(ABSOLUTE_PATH + 'atm.json')
 RAINFALL_INTENSITY = load_json(ABSOLUTE_PATH + 'rainfall_intensity.json')
 WIND_SPEED = load_json(ABSOLUTE_PATH + 'wind_speed.json')
 RADIOLOGY = load_json(ABSOLUTE_PATH + 'radiology.json')
-PRODUCTION_ELECTRICITY = load_json(ABSOLUTE_PATH + 'production_electricity.json')
+PRODUCTION_ELECTRICITY = load_json(
+    ABSOLUTE_PATH + 'production_electricity.json'
+)
+PRODUCTION_ELECTRICITY_PAST_DAY = load_json(
+    ABSOLUTE_PATH + 'production_electricity_past_day.json'
+)
 
 
 def display_config():
@@ -72,12 +77,22 @@ def display_config():
     init_base_parameters(RADIOLOGY, COLORS)
     print('')
 
-    # Production of electricity for current day/month
+    # Production of electricity for the current month
     init_multigraph(PRODUCTION_ELECTRICITY)
     print('graph_args --base 1000 --lower-limit 0')
     init_base_parameters(PRODUCTION_ELECTRICITY, COLORS)
     for field in PRODUCTION_ELECTRICITY['fields']:
-        print(f"{field['id']}.draw AREA")
+        print(f"{field['id']}.min 0")
+        print(f"{field['id']}.draw AREASTACK")
+    print('')
+
+    # Production of electricity for the past day
+    init_multigraph(PRODUCTION_ELECTRICITY_PAST_DAY)
+    print('graph_args --base 1000 --lower-limit 0')
+    init_base_parameters(PRODUCTION_ELECTRICITY_PAST_DAY, COLORS)
+    for field in PRODUCTION_ELECTRICITY_PAST_DAY['fields']:
+        print(f"{field['id']}.min 0")
+        print(f"{field['id']}.draw AREASTACK")
     print('')
 
 
@@ -133,8 +148,11 @@ def rnpp_node(config):
         logger.error('When decode data: url=%s, params=%s',
                      url, config['params3'])
 
-    # Production of electricity for current month
+    # Production of electricity for the current month
     get_values_multigraph(data, PRODUCTION_ELECTRICITY, 0.001)
+
+    # Production of electricity for the past day
+    get_values_multigraph(data, PRODUCTION_ELECTRICITY_PAST_DAY, 0.001)
 
     logger.info('Finish rnpp-node (main)')
     sys.exit(0)

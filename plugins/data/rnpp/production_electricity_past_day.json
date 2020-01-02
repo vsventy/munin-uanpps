@@ -1,0 +1,34 @@
+{
+  "id": "production_electricity_past_day",
+  "title": "Rivne NPP Production of electricity for past day (in mln kWh)",
+  "category": "performance",
+  "vlabel": "million kilowatt-hours (mln kWh)",
+  "total": "Total plant",
+  "scale": "no",
+  "fields": [
+    {
+      "id": "prod_for_past_day_b1",
+      "label": "Unit 1",
+      "parameter": "PrevDayLoad.PD_B1",
+      "colour": "Brown.500"
+    },
+    {
+      "id": "prod_for_past_day_b2",
+      "label": "Unit 2",
+      "parameter": "PrevDayLoad.PD_B2",
+      "colour": "Orange.500"
+    },
+    {
+      "id": "prod_for_past_day_b3",
+      "label": "Unit 3",
+      "parameter": "PrevDayLoad.PD_B3",
+      "colour": "Indigo.500"
+    },
+    {
+      "id": "prod_for_past_day_b4",
+      "label": "Unit 4",
+      "parameter": "PrevDayLoad.PD_B4",
+      "colour": "Purple.500"
+    }
+  ]
+}

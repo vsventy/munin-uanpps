@@ -2,6 +2,7 @@
 import ast
 import logging
 import os
+import pdb
 import sys
 import urllib.request
 
@@ -85,7 +86,7 @@ def display_config():
 def get_lists_of_values(rows):
     values_list = []
     for row in rows:
-        cols = row.find_all('div', class_='m_cell')
+        cols = row.find_all('div', class_='cnt-info-2')
         cols = [elem.text.strip() for elem in cols]
         values_list.append([elem for elem in cols if elem])
     return values_list
@@ -99,23 +100,29 @@ def khnpp_node(config):
     soup = BeautifulSoup(response, 'html.parser')
 
     # retrieve meteo parameters
-    meteo_container = soup.find(id='lightmeteo')
+    meteo_container = soup.find_all(
+        'div',
+        {'data-href': '/store/pages/ukr/meteo'}
+    )[0]
     meteo_rows = meteo_container.find_all('div', class_='m_row')
     meteo_data = get_lists_of_values(meteo_rows)
 
-    air_temperature = meteo_data[0][1].split(' ', 1)[0]
-    wind_speed = meteo_data[1][1].split(' ', 1)[0]
-    humidity = meteo_data[2][1].split(' ', 1)[0]
-    atmospheric_pressure = meteo_data[3][1].split(' ', 1)[0]
+    air_temperature = meteo_data[0][0].split(' ', 1)[0]
+    wind_speed = meteo_data[1][0].split(' ', 1)[0]
+    humidity = meteo_data[2][0].split(' ', 1)[0]
+    atmospheric_pressure = meteo_data[3][0].split(' ', 1)[0]
 
     # retrieve performance parameters
-    perform_container = soup.find_all('div', class_='m_table')[0]
+    perform_container = soup.find_all(
+        'div',
+        {'data-href': '/store/pages/ukr/khnppperfind'}
+    )[0]
     perform_rows = perform_container.find_all('div', class_='m_row')
     perform_data = get_lists_of_values(perform_rows)
 
     units_list = []
-    unit_1 = perform_data[0][1].split(' ', 1)[0]
-    unit_2 = perform_data[1][1].split(' ', 1)[0]
+    unit_1 = perform_data[0][0].split(' ', 1)[0]
+    unit_2 = perform_data[1][0].split(' ', 1)[0]
     units_list.extend((unit_1, unit_2))
 
     # retrieve radiological situation

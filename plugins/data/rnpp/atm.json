@@ -9,7 +9,7 @@
     {
       "id": "atm",
       "label": "Atmospheric pressure",
-      "parameter": "M_PA_1M_AVG",
+      "parameter": "MT_PA_1M_AVG",
       "colour": "Amber.500"
     }
   ]

@@ -9,7 +9,7 @@
     {
       "id": "rain_intensity",
       "label": "Intensity of rainfall",
-      "parameter": "M_WATER_1H",
+      "parameter": "MT_WATER_1H",
       "colour": "Indigo.500"
     }
   ]

@@ -172,7 +172,7 @@ def main():
         'host': os.environ.get('host', 'www.rnpp.rv.ua'),
         'logging': os.environ.get('uanpps_logging', 'False'),
         'proxies': os.environ.get('proxies', ''),
-        'timeout': os.environ.get('timeout', 10),
+        'timeout': int(os.environ.get('timeout', 10)),
         'params1': {'value': 'sprutbase'},
         'params2': {'value': 'rnpp_n'},
         'params3': {'value': 'rnpp_current_state_sm'},

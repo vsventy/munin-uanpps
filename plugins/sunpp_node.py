@@ -119,7 +119,7 @@ def sunpp_node(config):
 
     units_tables = units_soup.find_all('table', class_='table-param-askro')
     units_list = []
-    for unit_table in units_tables:
+    for unit_table in units_tables[:3]:
         data = get_lists_of_values(unit_table.find_all('tr'))
         units_list.append(data[2][1])
 
